@@ -13,48 +13,44 @@ import numpy as np
 class InterfaceAport:
     
     def __init__(self):
-        # Attributs
-        self._b=1
+
+        # Audio parameters
+        self.bitrate_ = 44100
 
         # create an audio object
-        self._p = pyaudio.PyAudio()
-        self._stream = None
-        
+        self.p_ = pyaudio.PyAudio()
+        self.stream_ = None
+        self.createDefaultStream()
+              
     def __del__(self):
-        self._p.terminate()      
+        self.p_.terminate()
+        self.stream_.close()  
         
-    def getb(self):
-        return self._b
+    def getBitrate(self):
+        return self.bitrate_
 
-    def setb(self, v):
-        self._b  =  v
+    def setBitrate(self, v):
+        self.bitrate_  =  v
+        
+    def createDefaultStream(self):
+        self.stream_ = self.p_.open(format = self.p_.get_format_from_width(1), 
+            channels = 1, 
+            rate = self.bitrate_, 
+            output = True)
         
     def playTone(self):
-        bitrate = 44100 #number of frames per second/frameset.      
+            
         f = 2*440 #Hz, waves per second, 261.63=C4-note.
-        duration = 1 #seconds to play sound
         amp=0.5
+        duration = 1 #seconds to play sound
     
-        numberofframes = int(bitrate * duration)
-#        restframes = numberofframes % bitrate
+        numberofframes = int(self.bitrate_ * duration)
+        
         data = ''    
-
         for x in xrange(numberofframes):
-            data = data+chr(int(amp*np.sin(x/((bitrate/f)/3.14))*127+128))    
+            data = data+chr(int(amp*np.sin(x/((self.bitrate_/f)/3.14))*127+128))    
 
-#        #fill remainder of frameset with silence
-#        for x in xrange(restframes): 
-#            print 'b'                
-#            data = data+chr(128)
-
-        self._stream = self._p.open(format = self._p.get_format_from_width(1), 
-            channels = 1, 
-            rate = bitrate, 
-            output = True)
-        self._stream.write(data)  
-
-        # cleanup stuff.
-        self._stream.close() 
+        self.stream_.write(data)  
               
     def playWave(self, fileName):
         
@@ -63,21 +59,20 @@ class InterfaceAport:
         data = wf.readframes(chunk)
          
         # open stream based on the wave object which has been input.
-        self._stream = self._p.open(format =
-                  self._p.get_format_from_width(wf.getsampwidth()),
+        self.stream_ = self.p_.open(format =
+                  self.p_.get_format_from_width(wf.getsampwidth()),
                   channels = wf.getnchannels(),
                   rate = wf.getframerate(),
                   output = True)
             
         while data != '':
             # writing to the stream is what *actually* plays the sound.
-            self._stream.write(data)
+            self.stream_.write(data)
             data = wf.readframes(chunk)
-
-        # cleanup stuff.
-        self._stream.close()    
             
-    b=property(getb, setb)
+        self.createDefaultStream()
+            
+    bitrate=property(getBitrate, setBitrate)
             
 
 if __name__ == "__main__":
