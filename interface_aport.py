@@ -14,6 +14,13 @@ class InterfaceAport:
     def __init__(self):
         # Attributs
         self._b=1
+
+        # create an audio object
+        self._p = pyaudio.PyAudio()
+        self._stream = None
+        
+    def __del__(self):
+        self._p.terminate()      
         
     def getb(self):
         print "Récupération du nombre de roues"
@@ -22,45 +29,36 @@ class InterfaceAport:
     def setb(self, v):
         print "Changement du nombre de roues"
         self._b  =  v
-        
-    def playWave(self, fileName):
-        '''
-        From the example "play" of Pyaudio
-        '''
-        
+              
+    def playWave(self, fileName):      
         # length of data to read.
-        chunk = 1024
-
-        '''
-        ************************************************************************
-        This is the start of the "minimum needed to read a wave"
-        ************************************************************************
-        '''
+        chunk = 512 #1024
         # open the file for reading.
-        wf = wave.open(sound, 'rb')
-          
-        # create an audio object
-        p = pyaudio.PyAudio()
+        wf = wave.open(fileName, 'rb')    
          
         # open stream based on the wave object which has been input.
-        stream = p.open(format =
-                  p.get_format_from_width(wf.getsampwidth()),
+        self._stream = self._p.open(format =
+                  self._p.get_format_from_width(wf.getsampwidth()),
                   channels = wf.getnchannels(),
                   rate = wf.getframerate(),
                   output = True)
+            
+        print 'format=' + str(self._p.get_format_from_width(wf.getsampwidth()))
+        print 'channels=' + str(wf.getnchannels())
+        print 'rate=' + str(wf.getframerate())
+        print 'output=' + str(True)
                     
-        # read data (based on the chunk size)
+        # play stream (looping from beginning of file to the end)            
+                    # read data (based on the chunk size)
+                    
         data = wf.readframes(chunk)
-                  
-        # play stream (looping from beginning of file to the end)
         while data != '':
-        # writing to the stream is what *actually* plays the sound.
-            stream.write(data)
+            # writing to the stream is what *actually* plays the sound.
+            self._stream.write(data)
             data = wf.readframes(chunk)
 
         # cleanup stuff.
-        stream.close()    
-        p.terminate()
+        self._stream.close()    
             
     b=property(getb, setb)
             
@@ -77,7 +75,7 @@ if __name__ == "__main__":
                 "Usage: %s filename.wav" % sys.argv[0]
         sound="ressources/COW_1.WAV" 
     else:
-        sound=sound
+        sound=sys.argv[1]
         
     interface.playWave(sound)
 
