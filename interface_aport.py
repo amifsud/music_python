@@ -38,12 +38,7 @@ class InterfaceAport:
             rate = self.bitrate_, 
             output = True)
         
-    def playTone(self):
-            
-        f = 2*440 #Hz, waves per second, 261.63=C4-note.
-        amp=0.5
-        duration = 1 #seconds to play sound
-    
+    def playTone(self,f,amp,duration):
         numberofframes = int(self.bitrate_ * duration)
         
         data = ''    
@@ -77,10 +72,9 @@ class InterfaceAport:
 
 if __name__ == "__main__":
 
-    sound="ressources/COW_1.WAV"     
-    
     interface=InterfaceAport()
-    interface.playWave(sound)
-    interface.playTone()
+    
+    interface.playWave("ressources/COW_1.WAV")
+    interface.playTone(440,0.5,3) # f(Hz), rate of amplitude, duration (s)
 
     
