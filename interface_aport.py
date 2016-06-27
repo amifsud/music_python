@@ -10,34 +10,49 @@ import pyaudio
 import wave
 import numpy as np
 
-class InterfaceAport:
+class InterfaceAport(object):
     
     def __init__(self):
 
         # Audio parameters
         self.bitrate_ = 44100
+        self.channels_ = 1
 
         # create an audio object
         self.p_ = pyaudio.PyAudio()
         self.stream_ = None
-        self.createDefaultStream()
-              
+        self.createStream()
+        
+    @property
+    def bitrate(self):
+        return self.bitrate_
+    @bitrate.setter
+    def bitrate(self, x):
+        self.bitrate_=x
+        self.createStream()
+        
+    @property
+    def channels(self):
+        return self.channels_
+    @channels.setter
+    def channels(self, x):
+        self.channels_=x
+        self.createStream()
+            
     def __del__(self):
         self.p_.terminate()
-        self.stream_.close()  
+        self.stream_.close()
         
-    def getBitrate(self):
-        return self.bitrate_
-
-    def setBitrate(self, v):
-        self.bitrate_  =  v
-        
-    def createDefaultStream(self):
-        self.stream_ = self.p_.open(format = self.p_.get_format_from_width(1), 
-            channels = 1, 
+    def createStream(self):
+        if self.stream_ != None:
+            self.stream_.close()
+            
+        self.stream_ = self.p_.open(
+            format = self.p_.get_format_from_width(1), 
+            channels = self.channels_, 
             rate = self.bitrate_, 
             output = True)
-        
+    
     def playTone(self,f,amp,duration):
         numberofframes = int(self.bitrate_ * duration)
         
@@ -53,28 +68,31 @@ class InterfaceAport:
         wf = wave.open(fileName, 'rb')    
         data = wf.readframes(chunk)
          
-        # open stream based on the wave object which has been input.
-        self.stream_ = self.p_.open(format =
-                  self.p_.get_format_from_width(wf.getsampwidth()),
-                  channels = wf.getnchannels(),
-                  rate = wf.getframerate(),
-                  output = True)
+        self.stream_ = self.p_.open(
+            format =self.p_.get_format_from_width(wf.getsampwidth()),
+            channels = wf.getnchannels(),
+            rate = wf.getframerate(),
+            output = True)
             
         while data != '':
-            # writing to the stream is what *actually* plays the sound.
             self.stream_.write(data)
             data = wf.readframes(chunk)
             
-        self.createDefaultStream()
-            
-    bitrate=property(getBitrate, setBitrate)
-            
+        self.createStream()
 
 if __name__ == "__main__":
 
     interface=InterfaceAport()
     
-    interface.playWave("ressources/COW_1.WAV")
-    interface.playTone(440,0.5,3) # f(Hz), rate of amplitude, duration (s)
+    #interface.playWave("ressources/COW_1.WAV")
+    #interface.playTone(440,0.5,3) # f(Hz), rate of amplitude, duration (s)
+    
+    print interface.stream_.__dict__
+    interface.bitrate=22000
+    interface.channels=2
+    print interface.stream_.__dict__
+    
+    #del interface
+    
 
     
