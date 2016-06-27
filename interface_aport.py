@@ -8,6 +8,7 @@ Created on Mon Jun 27 12:05:09 2016
 
 import pyaudio
 import wave
+import numpy as np
 
 class InterfaceAport:
     
@@ -29,9 +30,37 @@ class InterfaceAport:
     def setb(self, v):
         print "Changement du nombre de roues"
         self._b  =  v
+        
+    def playTone(self):
+        #See http://en.wikipedia.org/wiki/Bit_rate#Audio
+        bitrate = 44100 #number of frames per second/frameset.      
+
+        #See http://www.phy.mtu.edu/~suits/notefreqs.html
+        f = 2109.89 #Hz, waves per second, 261.63=C4-note.
+        duration = 1.2 #seconds to play sound
+    
+        numberofframes = int(bitrate * duration)
+        restframes = numberofframes % bitrate
+        data = ''    
+
+        for x in xrange(numberofframes):
+            data = data+chr(int(np.sin(x/((bitrate/f)/3.14))*127+128))    
+
+        #fill remainder of frameset with silence
+        for x in xrange(restframes): 
+                data = data+chr(128)
+
+        stream = self._p.open(format = self._p.get_format_from_width(1), 
+            channels = 1, 
+            rate = bitrate, 
+            output = True)
+        stream.write(data)  
+
+        # cleanup stuff.
+        self._stream.close() 
               
     def playWave(self, fileName):      
-        # length of data to read.
+        # duration of data to read.
         chunk = 512 #1024
         # open the file for reading.
         wf = wave.open(fileName, 'rb')    
@@ -43,10 +72,10 @@ class InterfaceAport:
                   rate = wf.getframerate(),
                   output = True)
             
-        print 'format=' + str(self._p.get_format_from_width(wf.getsampwidth()))
-        print 'channels=' + str(wf.getnchannels())
-        print 'rate=' + str(wf.getframerate())
-        print 'output=' + str(True)
+#        print 'format=' + str(self._p.get_format_from_width(wf.getsampwidth()))
+#        print 'channels=' + str(wf.getnchannels())
+#        print 'rate=' + str(wf.getframerate())
+#        print 'output=' + str(True)
                     
         # play stream (looping from beginning of file to the end)            
                     # read data (based on the chunk size)
@@ -68,7 +97,7 @@ if __name__ == "__main__":
     
     interface=InterfaceAport()
     a=interface.b
-    
+      
     # validation. If a wave file hasn't been specified, exit.
     if len(sys.argv) < 2:
         print "Plays a wave file.\n\n" +\
@@ -77,6 +106,7 @@ if __name__ == "__main__":
     else:
         sound=sys.argv[1]
         
-    interface.playWave(sound)
+    #interface.playWave(sound)
+    interface.playTone()
 
     
