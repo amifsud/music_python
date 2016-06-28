@@ -54,17 +54,33 @@ class InterfaceAport(object):
             channels = self.channels_, 
             rate = self.bitrate_, 
             output = True)
+            
+    def normalizeSpectre(self,sin):
+        
+        sum=0
+        for i in range(len(sin)-1):
+           sum += s[i+1][1]
+           
+        sout=sin
+        sout[0][1]=1.0/(1.0+sum)
+        
+        for i in range(len(sin)-1):
+           sout[i+1][1]=sout[0][1]*sin[i+1][1]
+        
+        return sout
        
-    def playTone(self,s,duration):
-        
-        f=s[0]
-        amp=s[1]
-        
+    def playTone(self,sin,duration):
+
         numberofframes = int(self.bitrate_ * duration)
         data = ''  
         
-        for x in xrange(numberofframes):
-            data = data+chr(int(amp*np.sin(x/((self.bitrate_/f)/3.14))*127+128))    
+        s=interface.normalizeSpectre(sin)
+        
+        for x in xrange(numberofframes):  
+            y = 0.0
+            for n in range(len(s)):
+                y+=s[n][1]*np.sin(2*np.pi*s[n][0]*x/self.bitrate_)         
+            data += chr(int(y*127+128))
 
         self.stream_.write(data)
               
@@ -91,9 +107,11 @@ class InterfaceAport(object):
         # get FFT
         myfft = fftp.fft(y, n)
         # kill higher freqs above wavenumber wn
-        myfft[wn:-wn] = 0
+        #myfft[wn:-wn] = 0
         # make new series
         y2 = fftp.ifft(myfft).real
+        
+        print myfft        
         
         plt.figure(num=None)
         plt.plot(x, y, x, y2)
@@ -103,8 +121,15 @@ if __name__ == "__main__":
 
     interface=InterfaceAport()
     
-    #interface.playWave("ressources/COW_1.WAV")
-    #interface.playTone([440,0.5],3) # f(Hz), rate of amplitude, duration (s)
+#    interface.playWave("ressources/COW_1.WAV")
+    
+    s=[[440.0,1]]
+    interface.playTone(s,3) # f(Hz), rate of amplitude, duration (s) 
+    
+    s=[[440.0, 1],
+       [880.0, 0.5],
+       [1320.0, 0.25]]
+    interface.playTone(s,3) # f(Hz), rate of amplitude, duration (s)
     
 #    print interface.stream_.__dict__
 #    interface.bitrate=22000
@@ -113,8 +138,4 @@ if __name__ == "__main__":
     
     #del interface
     
-    x = np.array([float(i) for i in range(0,360)])
-    y = np.sin(2*np.pi/360*x) + np.sin(2*2*np.pi/360*x) + 5
-
-    interface.fourier_series(x, y, 3, 360)
-    
+   
