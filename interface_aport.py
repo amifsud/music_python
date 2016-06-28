@@ -123,13 +123,41 @@ if __name__ == "__main__":
     
 #    interface.playWave("ressources/COW_1.WAV")
     
-    s=[[440.0,1]]
+    f=220.0    
+    
+    s=[[f,1]]
     interface.playTone(s,3) # f(Hz), rate of amplitude, duration (s) 
     
-    s=[[440.0, 1],
-       [880.0, 0.5],
-       [1320.0, 0.25]]
+    # Violon
+    s=[[f, 140.0],
+       [2*f, 80.0],
+       [3*f, 15.0],
+       [4*f, 45.0],
+       [5*f, 75.0],
+       [6*f, 1.0],
+       [7*f, 12.0],
+       [8*f, 30.0],
+       [9*f, 2.0],
+       [10*f, 2.0],
+       [11*f, 5.0],
+       [12*f, 2.0],
+       [13*f, 5.0]]
     interface.playTone(s,3) # f(Hz), rate of amplitude, duration (s)
+    
+    # Violoncelle
+    s=[[196, 1],
+       [392, 2],
+       [784, 1]]
+    interface.playTone(s,3) # f(Hz), rate of amplitude, duration (s) 
+    
+    # Orgue
+    f=220
+    s=[[f, 0.5],
+       [2*f, 1.0],
+       [3*f, 0.2],
+       [4*f, 0.3],
+       [5*f, 0.1]]
+    interface.playTone(s,3) # f(Hz), rate of amplitude, duration (s)    
     
 #    print interface.stream_.__dict__
 #    interface.bitrate=22000
