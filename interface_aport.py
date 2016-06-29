@@ -74,7 +74,7 @@ class InterfaceAport(object):
         numberofframes = int(self.bitrate_ * duration)
         data = ''  
         
-        s=interface.normalizeSpectre(sin)
+        s=self.normalizeSpectre(sin)
         
         for x in xrange(numberofframes):  
             y = 0.0

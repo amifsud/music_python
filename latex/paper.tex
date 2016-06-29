@@ -1,0 +1,116 @@
+\documentclass{article}
+
+\usepackage{amsmath} % assumes amsmath package installed
+\usepackage{hyperref}
+
+\title{Music with Python}
+\author{Alexis Mifsud}
+
+
+\begin{document}
+\maketitle
+
+The aim of this paper is to group all the scientific part and conventions of the music\_python package.
+
+\tableofcontents
+
+%\newpage
+
+\section{Signal from spectrum}
+\renewcommand\vec[1]{\mathbf{#1}}
+\newcommand\s{\vec{s}}
+\newcommand\br{\vec{b}}
+\newcommand\p{\vec{p}}
+
+\subsection{Fourier series}
+
+Let define $\s$ the spectrum of the desired signal. In python the spectrum is a list of sub-list where each sub-list contain the frequency and the relative amplitude to the fondamental. For the harmonic i:
+\begin{equation}
+\s[i]=[f_i,A_i]
+\end{equation}
+where $f_i$ is the frequency of the harmonic and $A_i$ is the amplitude of the harmonic.
+
+We have for each time k:
+\begin{equation}
+y_k=\sum_{i=1}^{N} A_i sin(2 \pi f_i k)
+\end{equation}
+where N is the number of harmonics
+
+\subsection{Time representation}
+
+In numeric music, the time is discretized with a period called the \textit{bitrate} in Hertz which will be noted $\br$. Usually $\br=44100 Hz$
+
+\section{Keeping noise power when adding harmonics}
+
+\subsubsection*{For one harmonic (the fondamental):}
+
+\begin{equation}
+\s = \begin{bmatrix}
+f_1 & A_1
+\end{bmatrix}
+=
+\begin{bmatrix}
+f_1 & 1
+\end{bmatrix}
+\end{equation}
+By convention, we want to keep: $-1<A<1$. This permit to encode the amplitude like:
+\begin{equation}
+char(A)=A*127+128
+\end{equation}
+where char(A) is a character ($0<char(A)<255$)
+
+\subsubsection*{For more harmonics}
+
+The problem is that the signal power as to be keep. Let's consider the folowing case where we add $f_2$ and $f_3$:
+\begin{align}
+\s
+= \begin{bmatrix}
+f_1 & A_1 \\
+f_2 & A_2 \\
+f_3 & A_3 \\
+\end{bmatrix}
+= \begin{bmatrix}
+f_1 & 1 \\
+f_2 & 0.5 \\
+f_3 & 0.25 \\
+\end{bmatrix} \nonumber \\ 
+\end{align}
+where 0.5 mean 50\% in amplitude of f1.
+
+In this case we have the followinf power:
+\begin{equation}
+\p = \sum_{i=1}^3 A_i^2 = 0.605 W/m^2
+\end{equation}
+
+If we want to have the same power:
+\begin{align}
+\sum_{i=1}^N A_i^2 =1 \\
+A_1^2 (1+\sum_{i=2}^N A_i^2) =1 \\
+\end{align}
+So:
+\begin{align}
+A'_1=\frac{1}{\sqrt{1+\sum_{i=2}^N A_i^2}} \\
+A'_i = A'_1  A_i
+\end{align}
+
+Finally I removed all the squared values...
+
+\section{Interresting websites}
+
+\begin{itemize}
+\item \url{http://musique.ac-dijon.fr/bac2001/grisey/pages/acoustic.htm}
+\item \url{http://ssl7.ovh.net/~pianoteq/philippe/sons-musique.pdf}
+\item \url{https://fr.wikipedia.org/wiki/LilyPond}
+\end{itemize}
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
