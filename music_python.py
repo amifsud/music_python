@@ -15,10 +15,8 @@ class musicPython(object):
         
 #    def __del__(self):
         
-    def playNote(self, note, sin):
-
-        duration=0.5
-        
+    def playNote(self, note, sin, duration):
+       
         if note == 'a': f=440.0
         else:
             if note == 'ais': num=1
@@ -37,24 +35,56 @@ class musicPython(object):
             elif note == 'b\'': num=14
             elif note == 'c\'': num=15
             f= 440.0*pow(2,num/12.0)
-        
-        sout=[[0,0]]
+                   
+        sout=[[sin[0][0]*f,sin[0][1]]]
         for i in range(len(sin)):
-            sout[i][0]=sin[i][0]*f
+            sout.append([sin[i][0]*f,sin[i][1]])
 
-        self.interface.playTone(sout,duration)        
+        self.interface.playTone(sout,duration) 
+
+    def playCScale(self,s,duration):
+        music.playNote('c',s,duration)
+        music.playNote('d',s,duration)
+        music.playNote('e',s,duration)
+        music.playNote('f',s,duration)
+        music.playNote('g',s,duration)
+        music.playNote('a\'',s,duration)
+        music.playNote('b\'',s,duration)
+        music.playNote('c\'',s,duration)
   
 if __name__ == "__main__":
-    
+       
     music = musicPython()
     
     s=[[1,1]] # first harmonic, amplitude 1
+    duration=0.5
     
-    music.playNote('c',s)
-    music.playNote('d',s)
-    music.playNote('e',s)
-    music.playNote('f',s)
-    music.playNote('g',s)
-    music.playNote('a\'',s)
-    music.playNote('b\'',s)
-    music.playNote('c\'',s)
+    # Orgue
+    s=[[1, 0.5],
+       [2, 1.0],
+       [3, 0.2],
+       [4, 0.3],
+       [5, 0.1]]
+       
+    # Violon
+    s=[[1, 140.0],
+       [2, 80.0],
+       [3, 15.0],
+       [4, 45.0],
+       [5, 75.0],
+       [6, 1.0],
+       [7, 12.0],
+       [8, 30.0],
+       [9, 2.0],
+       [10, 2.0],
+       [11, 5.0],
+       [12, 2.0],
+       [13, 5.0]]
+       
+    # Violoncelle
+    s=[[1, 1],
+       [2, 2],
+       [4, 1]]
+       
+    music.playCScale(s,duration)
+    
