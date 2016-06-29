@@ -59,7 +59,7 @@ class InterfaceAport(object):
         
         sum=0
         for i in range(len(sin)-1):
-           sum += s[i+1][1]
+           sum += sin[i+1][1]
            
         sout=sin
         sout[0][1]=1.0/(1.0+sum)
