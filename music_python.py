@@ -13,18 +13,22 @@ class musicPython(object):
     def __init__(self):
         
         self.interface = InterfaceAport()
+        self.tempo=60 # 60 noirs/minutes
+        self.duration=1
+        self.halfDuration=0
+        
         
 #    def __del__(self):
         
     def playNote(self, note, sin, duration):
         
-        octave=1
         
+        # Getting octave
+        octave=1
         r=re.search('(.*)\'',  note)
         if r:
             note=r.group(1)
-            octave=2
-            
+            octave=2  
         r=re.search('(.*)\,',  note)
         if r:
             note=r.group(1)
@@ -61,12 +65,21 @@ class musicPython(object):
         music.playNote('b\'',s,duration)
         music.playNote('c\'',s,duration)
         
-    def playLySheet(self,sheet,s,d):
+    def computeDuration(self,i):
+        self.halfDuration=0
+        if i != '':
+            r=re.search('([1-9]{0,2})(\.{0,1})',i)
+            self.duration=  60.0/self.tempo*4/float(r.group(1))
+            if r.group(2) == '.':
+                self.halfDuration=1
+        
+    def playLySheet(self,sheet,s):
         l=re.split(' ', sheet)
         for i in range(len(l)):
-            n=l[i]
-            if n != '{' and n!= '}':
-                self.playNote(n,s,d)
+            n=re.search('([a-g\'is,]+)([1-9\.]{0,2})',l[i])
+            if n!= None:
+                self.computeDuration(n.group(2))
+                self.playNote(n.group(1),s,self.duration*(1+self.halfDuration*0.5))
   
 if __name__ == "__main__":
        
@@ -104,6 +117,7 @@ if __name__ == "__main__":
        
     #music.playCScale(s,duration)
     
-    sheet="{ a, ais, b, c, cis, d, dis, e, f, fis, g, gis, a ais b c cis d dis e f fis g gis a' ais' b' c' cis' d' dis' e' f' fis' g' gis' }"
-    music.playLySheet(sheet,s,duration)
+    sheet="{ a,4 ais,8 b, c, cis, d, dis, e, f, fis, g, gis, a4 ais8 b c cis d dis e f fis g gis a'4 ais'8 b' c' cis' d' dis' e' f' fis' g' gis' }"
+    sheet="{ ais8 ais a g,16 f, f, d,8. c,4 f,2  }"
+    music.playLySheet(sheet,s)
         
