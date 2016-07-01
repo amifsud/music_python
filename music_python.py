@@ -22,7 +22,6 @@ class musicPython(object):
         
     def playNote(self, note, sin, duration):
         
-        
         # Getting octave
         octave=1
         r=re.search('(.*)\'',  note)
@@ -36,17 +35,17 @@ class musicPython(object):
        
         if note == 'a': f=440.0*octave
         else:
-            if note == 'ais': num=1
+            if note == 'ais' or note == 'bes': num=1
             elif note == 'b': num=2
             elif note == 'c': num=3
-            elif note == 'cis': num=4
+            elif note == 'cis' or note == 'des': num=4
             elif note == 'd': num=5
-            elif note == 'dis': num=6
+            elif note == 'dis' or note == 'ees': num=6
             elif note == 'e': num=7
             elif note == 'f': num=8
-            elif note == 'fis': num=9
+            elif note == 'fis' or note == 'ges': num=9
             elif note == 'g': num=10
-            elif note == 'gis': num=11
+            elif note == 'gis' or note == 'aes': num=11
             f= 440.0*octave*pow(2,num/12.0)
                    
         sout=[[sin[0][0]*f,sin[0][1]]]
@@ -119,5 +118,7 @@ if __name__ == "__main__":
     
     sheet="{ a,4 ais,8 b, c, cis, d, dis, e, f, fis, g, gis, a4 ais8 b c cis d dis e f fis g gis a'4 ais'8 b' c' cis' d' dis' e' f' fis' g' gis' }"
     sheet="{ ais8 ais a g,16 f, f, d,8. c,4 f,2  }"
+    music.playLySheet(sheet,s)
+    shhet="{ bes'8 bes' a' g'16 f' f' d'8. c'4 f'2 }"
     music.playLySheet(sheet,s)
         
