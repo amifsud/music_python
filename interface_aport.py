@@ -71,17 +71,14 @@ class InterfaceAport(object):
        
     def playTone(self,sin,duration):
 
-        numberofframes = int(self.bitrate_ * duration)
-        data = ''  
-        
+        numberofframes = int(self.bitrate_ * duration)    
         s=self.normalizeSpectre(sin)
         
         for x in xrange(numberofframes):  
             y = 0.0
             for n in range(len(s)):
                 y+=s[n][1]*np.sin(2*np.pi*s[n][0]*x/self.bitrate_)         
-            data = chr(int(y*127+128))
-            self.stream_.write(data)
+            self.stream_.write(chr(int(y*127+128)))
               
     def playWave(self, fileName):
         

@@ -6,6 +6,7 @@ Created on Wed Jun 29 22:11:53 2016
 """
 
 from interface_aport import InterfaceAport
+import re
 
 class musicPython(object):
     
@@ -51,6 +52,13 @@ class musicPython(object):
         music.playNote('a\'',s,duration)
         music.playNote('b\'',s,duration)
         music.playNote('c\'',s,duration)
+        
+    def playLySheet(self,sheet,s,d):
+        l=re.split(' ', sheet)
+        for i in range(len(l)):
+            n=l[i]
+            if n != '{' and n!= '}':
+                self.playNote(n,s,d)
   
 if __name__ == "__main__":
        
@@ -86,5 +94,8 @@ if __name__ == "__main__":
        [2, 2],
        [4, 1]]
        
-    music.playCScale(s,duration)
+    #music.playCScale(s,duration)
     
+    sheet="{ c e e g }"
+    music.playLySheet(sheet,s,duration)
+        
