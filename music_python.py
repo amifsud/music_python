@@ -17,8 +17,20 @@ class musicPython(object):
 #    def __del__(self):
         
     def playNote(self, note, sin, duration):
+        
+        octave=1
+        
+        r=re.search('(.*)\'',  note)
+        if r:
+            note=r.group(1)
+            octave=2
+            
+        r=re.search('(.*)\,',  note)
+        if r:
+            note=r.group(1)
+            octave=0.5
        
-        if note == 'a': f=440.0
+        if note == 'a': f=440.0*octave
         else:
             if note == 'ais': num=1
             elif note == 'b': num=2
@@ -31,11 +43,7 @@ class musicPython(object):
             elif note == 'fis': num=9
             elif note == 'g': num=10
             elif note == 'gis': num=11
-            elif note == 'a\'': num=12
-            elif note == 'ais\'': num=13
-            elif note == 'b\'': num=14
-            elif note == 'c\'': num=15
-            f= 440.0*pow(2,num/12.0)
+            f= 440.0*octave*pow(2,num/12.0)
                    
         sout=[[sin[0][0]*f,sin[0][1]]]
         for i in range(len(sin)):
@@ -96,6 +104,6 @@ if __name__ == "__main__":
        
     #music.playCScale(s,duration)
     
-    sheet="{ c e e g }"
+    sheet="{ a, ais, b, c, cis, d, dis, e, f, fis, g, gis, a ais b c cis d dis e f fis g gis a' ais' b' c' cis' d' dis' e' f' fis' g' gis' }"
     music.playLySheet(sheet,s,duration)
         
