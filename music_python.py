@@ -8,19 +8,26 @@ Created on Wed Jun 29 22:11:53 2016
 from interface_aport import InterfaceAport
 import re
 
-class musicPython(object):
+class MusicPython(object):
     
     def __init__(self):
         
-        self.interface = InterfaceAport()
-        self.tempo=60 # 60 noirs/minutes
-        self.duration=1
-        self.halfDuration=0
+        self.interface_ = InterfaceAport()
+        self.tempo_=60 # 60 noirs/minutes
+        self.duration_=1
+        self.halfduration_=0
         
         
 #    def __del__(self):
         
-    def playNote(self, note, sin, duration):
+    @property
+    def tempo(self):
+        return self.tempo_
+    @tempo.setter
+    def bitrate(self, x):
+        self.tempo_=x
+        
+    def playNote(self, note, sin, duration_):
         
         # Getting octave
         octave=1
@@ -52,40 +59,40 @@ class musicPython(object):
         for i in range(len(sin)):
             sout.append([sin[i][0]*f,sin[i][1]])
 
-        self.interface.playTone(sout,duration) 
+        self.interface_.playTone(sout,duration_) 
 
-    def playCScale(self,s,duration):
-        music.playNote('c',s,duration)
-        music.playNote('d',s,duration)
-        music.playNote('e',s,duration)
-        music.playNote('f',s,duration)
-        music.playNote('g',s,duration)
-        music.playNote('a\'',s,duration)
-        music.playNote('b\'',s,duration)
-        music.playNote('c\'',s,duration)
+    def playCScale(self,s,duration_):
+        music.playNote('c',s,duration_)
+        music.playNote('d',s,duration_)
+        music.playNote('e',s,duration_)
+        music.playNote('f',s,duration_)
+        music.playNote('g',s,duration_)
+        music.playNote('a\'',s,duration_)
+        music.playNote('b\'',s,duration_)
+        music.playNote('c\'',s,duration_)
         
-    def computeDuration(self,i):
-        self.halfDuration=0
+    def computeduration_(self,i):
+        self.halfduration_=0
         if i != '':
             r=re.search('([1-9]{0,2})(\.{0,1})',i)
-            self.duration=  60.0/self.tempo*4/float(r.group(1))
+            self.duration_=  60.0/self.tempo_*4/float(r.group(1))
             if r.group(2) == '.':
-                self.halfDuration=1
+                self.halfduration_=1
         
     def playLySheet(self,sheet,s):
         l=re.split(' ', sheet)
         for i in range(len(l)):
             n=re.search('([a-g\'is,]+)([1-9\.]{0,2})',l[i])
             if n!= None:
-                self.computeDuration(n.group(2))
-                self.playNote(n.group(1),s,self.duration*(1+self.halfDuration*0.5))
+                self.computeduration_(n.group(2))
+                self.playNote(n.group(1),s,self.duration_*(1+self.halfduration_*0.5))
   
 if __name__ == "__main__":
        
-    music = musicPython()
+    music = MusicPython()
     
     s=[[1,1]] # first harmonic, amplitude 1
-    duration=0.5
+    duration_=0.5
     
     # Orgue
     s=[[1, 0.5],
@@ -114,7 +121,7 @@ if __name__ == "__main__":
        [2, 2],
        [4, 1]]
        
-    #music.playCScale(s,duration)
+    #music.playCScale(s,duration_)
     
     sheet="{ a,4 ais,8 b, c, cis, d, dis, e, f, fis, g, gis, a4 ais8 b c cis d dis e f fis g gis a'4 ais'8 b' c' cis' d' dis' e' f' fis' g' gis' }"
     sheet="{ ais8 ais a g,16 f, f, d,8. c,4 f,2  }"
