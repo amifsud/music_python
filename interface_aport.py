@@ -6,7 +6,7 @@ Created on Mon Jun 27 12:05:09 2016
 @author: alexis
 """
 
-import pyaudio
+from pyaudio import PyAudio
 import wave
 import numpy as np
 import scipy.fftpack as fftp
@@ -21,7 +21,7 @@ class InterfaceAport(object):
         self.channels_ = 1
 
         # create an audio object
-        self.p_ = pyaudio.PyAudio()
+        self.p_ = PyAudio()
         self.stream_ = None
         self.createStream()
         

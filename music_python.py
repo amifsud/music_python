@@ -13,7 +13,7 @@ class MusicPython(object):
     def __init__(self):
         
         self.interface_ = InterfaceAport()
-        self.tempo_=60 # 60 noirs/minutes
+        self.tempo_=90 # 60 noirs/minutes
         self.duration_=1
         self.halfduration_=0
         
@@ -40,9 +40,10 @@ class MusicPython(object):
             note=r.group(1)
             octave=0.5
        
-        if note == 'a': f=440.0*octave
+        if note == 'r': f=0.0
         else:
-            if note == 'ais' or note == 'bes': num=1
+            if note == 'a': num=0
+            elif note == 'ais' or note == 'bes': num=1
             elif note == 'b': num=2
             elif note == 'c': num=3
             elif note == 'cis' or note == 'des': num=4
@@ -82,7 +83,7 @@ class MusicPython(object):
     def playLySheet(self,sheet,s):
         l=re.split(' ', sheet)
         for i in range(len(l)):
-            n=re.search('([a-g\'is,]+)([1-9\.]{0,2})',l[i])
+            n=re.search('([a-g\'isr,]+)([1-9\.]{0,2})',l[i])
             if n!= None:
                 self.computeduration_(n.group(2))
                 self.playNote(n.group(1),s,self.duration_*(1+self.halfduration_*0.5))
@@ -125,7 +126,7 @@ if __name__ == "__main__":
     
     sheet="{ a,4 ais,8 b, c, cis, d, dis, e, f, fis, g, gis, a4 ais8 b c cis d dis e f fis g gis a'4 ais'8 b' c' cis' d' dis' e' f' fis' g' gis' }"
     sheet="{ ais8 ais a g,16 f, f, d,8. c,4 f,2  }"
-    music.playLySheet(sheet,s)
-    shhet="{ bes'8 bes' a' g'16 f' f' d'8. c'4 f'2 }"
+    # Happy birthday
+    sheet="{ r2 c8 c a'4 g f g2 e4 f r f g2 c,4 a' b' c' g2 e8 e f4 e d c2. r2. }"
     music.playLySheet(sheet,s)
         
