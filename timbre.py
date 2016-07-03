@@ -16,7 +16,6 @@ class Timbre(object):
     @property
     def spectre(self):
         return self.spectre_
-        
     @spectre.setter
     def spectre(self, x):
         if isinstance(x, str):
@@ -31,7 +30,6 @@ class Timbre(object):
         
     def setTimbre(self, name):
         self.timbres = shelve.open('timbres')
-        print 'Timbre:' + name
         self.spectre_=self.timbres[name]['spectre']
         self.timbres.close()
         

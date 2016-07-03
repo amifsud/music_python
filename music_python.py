@@ -16,11 +16,11 @@ class MusicPython(object):
         self.interface_ = InterfaceAport()
         self.timbre_ = Timbre()
         
-        # Tempo
+        # Rythm
         self.tempo_=90 # 60 noirs/minutes
         self.duration_=1
         self.halfduration_=0
-        
+        self.r = None
         
 #    def __del__(self):
         
@@ -33,11 +33,13 @@ class MusicPython(object):
         
     @property
     def timbre(self):
-        return self.timbre_.spectre
-        
+        return self.timbre_.spectre   
     @timbre.setter
     def timbre(self, x):
         self.timbre_.spectre=x
+        
+    def saveTimbre(self, name, spectre):
+        self.timbre_.saveTimbre(name,spectre)
         
     def playNote(self, note, sin, duration_):
         
@@ -87,9 +89,9 @@ class MusicPython(object):
     def computeduration_(self,i):
         self.halfduration_=0
         if i != '':
-            r=re.search('([1-9]{0,2})(\.{0,1})',i)
-            self.duration_=  60.0/self.tempo_*4/float(r.group(1))
-            if r.group(2) == '.':
+            self.r=re.search('([1-9]{0,2})(\.{0,1})',i)
+            self.duration_=  60.0/self.tempo_*4/float(self.r.group(1))
+            if self.r.group(2) == '.':
                 self.halfduration_=1
         
     def playLySheet(self,sheet):
@@ -102,11 +104,14 @@ class MusicPython(object):
   
 if __name__ == "__main__":
        
-    music = MusicPython()
-    music.timbre='violoncelle'
-
     sheet="{ a,4 ais,8 b, c, cis, d, dis, e, f, fis, g, gis, a4 ais8 b c cis d dis e f fis g gis a'4 ais'8 b' c' cis' d' dis' e' f' fis' g' gis' }"
     sheet="{ ais8 ais a g,16 f, f, d,8. c,4 f,2  }"
-    sheet="{ r2 c8 c a'4 g f g2 e4 f r f g2 c,4 a' b' c' g2 e8 e f4 e d c2. r2. }"
-    music.playLySheet(sheet)
+    sheet="{ r2 c8 c a'4 g f g2 e4 f r f g2 c,4 a' b' c' g2 e8 e f4 e d c2. r2. }"       
+       
+    music = MusicPython()
+    music.timbre='violon'
+    #music.playLySheet(sheet)
+       
+    music.timbre='cloche'
+    music.playLySheet('{ a }')
         
