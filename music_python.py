@@ -6,6 +6,7 @@ Created on Wed Jun 29 22:11:53 2016
 """
 
 from interface_aport import InterfaceAport
+from timbre import Timbre
 import re
 
 class MusicPython(object):
@@ -13,6 +14,9 @@ class MusicPython(object):
     def __init__(self):
         
         self.interface_ = InterfaceAport()
+        self.timbre_ = Timbre()
+        
+        # Tempo
         self.tempo_=90 # 60 noirs/minutes
         self.duration_=1
         self.halfduration_=0
@@ -24,8 +28,16 @@ class MusicPython(object):
     def tempo(self):
         return self.tempo_
     @tempo.setter
-    def bitrate(self, x):
+    def tempo(self, x):
         self.tempo_=x
+        
+    @property
+    def timbre(self):
+        return self.timbre_.spectre
+        
+    @timbre.setter
+    def timbre(self, x):
+        self.timbre_.spectre=x
         
     def playNote(self, note, sin, duration_):
         
@@ -80,53 +92,21 @@ class MusicPython(object):
             if r.group(2) == '.':
                 self.halfduration_=1
         
-    def playLySheet(self,sheet,s):
+    def playLySheet(self,sheet):
         l=re.split(' ', sheet)
         for i in range(len(l)):
             n=re.search('([a-g\'isr,]+)([1-9\.]{0,2})',l[i])
             if n!= None:
                 self.computeduration_(n.group(2))
-                self.playNote(n.group(1),s,self.duration_*(1+self.halfduration_*0.5))
+                self.playNote(n.group(1),self.timbre,self.duration_*(1+self.halfduration_*0.5))
   
 if __name__ == "__main__":
        
     music = MusicPython()
-    
-    s=[[1,1]] # first harmonic, amplitude 1
-    duration_=0.5
-    
-    # Orgue
-    s=[[1, 0.5],
-       [2, 1.0],
-       [3, 0.2],
-       [4, 0.3],
-       [5, 0.1]]
-       
-    # Violon
-    s=[[1, 140.0],
-       [2, 80.0],
-       [3, 15.0],
-       [4, 45.0],
-       [5, 75.0],
-       [6, 1.0],
-       [7, 12.0],
-       [8, 30.0],
-       [9, 2.0],
-       [10, 2.0],
-       [11, 5.0],
-       [12, 2.0],
-       [13, 5.0]]
-       
-    # Violoncelle
-    s=[[1, 1],
-       [2, 2],
-       [4, 1]]
-       
-    #music.playCScale(s,duration_)
-    
+    music.timbre='violoncelle'
+
     sheet="{ a,4 ais,8 b, c, cis, d, dis, e, f, fis, g, gis, a4 ais8 b c cis d dis e f fis g gis a'4 ais'8 b' c' cis' d' dis' e' f' fis' g' gis' }"
     sheet="{ ais8 ais a g,16 f, f, d,8. c,4 f,2  }"
-    # Happy birthday
     sheet="{ r2 c8 c a'4 g f g2 e4 f r f g2 c,4 a' b' c' g2 e8 e f4 e d c2. r2. }"
-    music.playLySheet(sheet,s)
+    music.playLySheet(sheet)
         
