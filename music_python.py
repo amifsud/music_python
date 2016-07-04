@@ -14,7 +14,10 @@ class MusicPython(object):
     def __init__(self):
         
         self.interface_ = InterfaceAport()
+        
+        # Harmony
         self.timbre_ = Timbre()
+        self.spectre_=None        
         
         # Rythm
         self.tempo_=90 # 60 noirs/minutes
@@ -41,7 +44,7 @@ class MusicPython(object):
     def saveTimbre(self, name, spectre):
         self.timbre_.saveTimbre(name,spectre)
         
-    def playNote(self, note, sin, duration_):
+    def computeSpectre(self, note, sin):
         
         # Getting octave
         octave=1
@@ -70,48 +73,37 @@ class MusicPython(object):
             elif note == 'gis' or note == 'aes': num=11
             f= 440.0*octave*pow(2,num/12.0)
                    
-        sout=[[sin[0][0]*f,sin[0][1]]]
+        self.spectre_=[[sin[0][0]*f,sin[0][1]]]
         for i in range(len(sin)):
-            sout.append([sin[i][0]*f,sin[i][1]])
-
-        self.interface_.playTone(sout,duration_) 
-
-    def playCScale(self,s,duration_):
-        music.playNote('c',s,duration_)
-        music.playNote('d',s,duration_)
-        music.playNote('e',s,duration_)
-        music.playNote('f',s,duration_)
-        music.playNote('g',s,duration_)
-        music.playNote('a\'',s,duration_)
-        music.playNote('b\'',s,duration_)
-        music.playNote('c\'',s,duration_)
-        
-    def computeduration_(self,i):
+            self.spectre_.append([sin[i][0]*f,sin[i][1]])
+       
+    def computeDuration_(self,i):
         self.halfduration_=0
         if i != '':
             self.r=re.search('([1-9]{0,2})(\.{0,1})',i)
             self.duration_=  60.0/self.tempo_*4/float(self.r.group(1))
             if self.r.group(2) == '.':
                 self.halfduration_=1
+                
+    def playTone(self, spectre, duration):
+        self.interface_.playTone(spectre,duration)
         
     def playLySheet(self,sheet):
         l=re.split(' ', sheet)
         for i in range(len(l)):
             n=re.search('([a-g\'isr,]+)([1-9\.]{0,2})',l[i])
             if n!= None:
-                self.computeduration_(n.group(2))
-                self.playNote(n.group(1),self.timbre,self.duration_*(1+self.halfduration_*0.5))
+                self.computeDuration_(n.group(2))
+                self.computeSpectre(n.group(1),self.timbre)
+                self.playTone(self.spectre_,self.duration_*(1+self.halfduration_*0.5)) 
   
 if __name__ == "__main__":
        
     sheet="{ a,4 ais,8 b, c, cis, d, dis, e, f, fis, g, gis, a4 ais8 b c cis d dis e f fis g gis a'4 ais'8 b' c' cis' d' dis' e' f' fis' g' gis' }"
     sheet="{ ais8 ais a g,16 f, f, d,8. c,4 f,2  }"
-    sheet="{ r2 c8 c a'4 g f g2 e4 f r f g2 c,4 a' b' c' g2 e8 e f4 e d c2. r2. }"       
-       
+    sheet="{ r2 c,8 c, a4 g, f, g,2 e,4 f, r f, g,2 c,4 a b c g,2 e,8 e, f,4 e, d, c,2. r2. }"       
+    #sheet="{ c4 c c d e2 d c4 e d d c2 c4 c c d e2 d c4 e d d c2 d4 d d d a2 a d4 c b a g,2 c4 c c d e2 d c4 e d d c2}"
     music = MusicPython()
     music.timbre='violon'
-    #music.playLySheet(sheet)
-       
-    music.timbre='cloche'
-    music.playLySheet('{ a }')
+    music.playLySheet(sheet)
         
