@@ -58,7 +58,7 @@ class LyParser(object):
             self.lastDuration_=duration
         elif lyHalfDuration == '.':
             self.lastDuration_=duration
-            duration=float(0.75*duration)
+            duration=float(2/3.0*duration)
         else:
             print "Bad half duration definition"
 
@@ -72,6 +72,9 @@ class LyParser(object):
         if self.r_ != None:
             self.note_.height=self.computeHeight(self.r_.group(1),self.r_.group(2),self.r_.group(3))
             self.note_.duration_=self.computeDuration(self.r_.group(4),self.r_.group(5))
+        else:
+            self.note_.height=None
+            self.note_.duration=None
             
         return self.note_
                  

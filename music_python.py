@@ -23,7 +23,7 @@ class MusicPython(object):
         self.spectre_=None        
         
         # Rythm
-        self.tempo_=90 # 60 noirs/minutes
+        self.tempo_=60 # 60 noirs/minutes
         self.duration_=1.0
         
 #    def __del__(self):
@@ -46,18 +46,12 @@ class MusicPython(object):
         self.timbre_.saveTimbre(name,spectre)
         
     def computeSpectre(self, height, sin):
-        if height == None or sin == None:
-            height = 0.0
-            
         self.spectre_=[[sin[0][0]*height,sin[0][1]]]
         for i in range(len(sin)):
             self.spectre_.append([sin[i][0]*height,sin[i][1]])            
             
     def computeDuration(self, duration):
-        if duration != None:
-            self.duration_ = 60.0/self.tempo_*4.0/float(duration)
-        else:
-            self.duration_ = 0.0
+        self.duration_ = 60.0/self.tempo_*4.0/float(duration)
                     
     def playTone(self, spectre, duration):
         self.interface_.playTone(spectre,duration)
@@ -66,8 +60,12 @@ class MusicPython(object):
         l=re.split(' ', sheet)
         for i in range(len(l)):
             self.note_ = self.parser_.getNote(l[i])
-            self.computeSpectre(self.note_.height,self.timbre)
-            self.computeDuration(self.note_.duration)
+            if self.note_.height != None and self.note_.duration != None:
+                self.computeSpectre(self.note_.height,self.timbre)
+                self.computeDuration(self.note_.duration)
+            else:
+                self.spectre_ = [[0,1]]
+                self.duration_ = 0.0
             self.playTone(self.spectre_,self.duration_) 
   
 if __name__ == "__main__":
@@ -76,6 +74,7 @@ if __name__ == "__main__":
     sheet="{ ais8 ais a g,16 f, f, d,8. c,4 f,2  }"
     sheet="{ r2 c,8 c, a4 g, f, g,2 e,4 f, r f, g,2 c,4 a b c g,2 e,8 e, f,4 e, d, c,2. r2. }"       
     #sheet="{ c4 c c d e2 d c4 e d d c2 c4 c c d e2 d c4 e d d c2 d4 d d d a2 a d4 c b a g,2 c4 c c d e2 d c4 e d d c2}"
+
     music = MusicPython()
     music.timbre='orgue'
     music.playLySheet(sheet)
