@@ -7,6 +7,7 @@ Created on Wed Jun 29 22:11:53 2016
 
 from interface_aport import InterfaceAport
 from timbre import Timbre
+from lylipond_parser import LyParser
 import re
 
 class MusicPython(object):
