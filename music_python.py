@@ -15,16 +15,16 @@ class MusicPython(object):
     def __init__(self):
         
         self.interface_ = InterfaceAport()
-        
+        self.parser_ = LyParser()
+        self.timbre_ = Timbre()        
+               
         # Harmony
-        self.timbre_ = Timbre()
+        self.note_ = None
         self.spectre_=None        
         
         # Rythm
         self.tempo_=90 # 60 noirs/minutes
-        self.duration_=1
-        self.halfduration_=0
-        self.r = None
+        self.duration_=1.0
         
 #    def __del__(self):
         
@@ -45,58 +45,30 @@ class MusicPython(object):
     def saveTimbre(self, name, spectre):
         self.timbre_.saveTimbre(name,spectre)
         
-    def computeSpectre(self, note, sin):
-        
-        # Getting octave
-        octave=1
-        r=re.search('(.*)\'',  note)
-        if r:
-            note=r.group(1)
-            octave=2  
-        r=re.search('(.*)\,',  note)
-        if r:
-            note=r.group(1)
-            octave=0.5
-       
-        if note == 'r': f=0.0
-        else:
-            if note == 'a': num=0
-            elif note == 'ais' or note == 'bes': num=1
-            elif note == 'b': num=2
-            elif note == 'c': num=3
-            elif note == 'cis' or note == 'des': num=4
-            elif note == 'd': num=5
-            elif note == 'dis' or note == 'ees': num=6
-            elif note == 'e': num=7
-            elif note == 'f': num=8
-            elif note == 'fis' or note == 'ges': num=9
-            elif note == 'g': num=10
-            elif note == 'gis' or note == 'aes': num=11
-            f= 440.0*octave*pow(2,num/12.0)
-                   
-        self.spectre_=[[sin[0][0]*f,sin[0][1]]]
+    def computeSpectre(self, height, sin):
+        if height == None or sin == None:
+            height = 0.0
+            
+        self.spectre_=[[sin[0][0]*height,sin[0][1]]]
         for i in range(len(sin)):
-            self.spectre_.append([sin[i][0]*f,sin[i][1]])
-       
-    def computeDuration_(self,i):
-        self.halfduration_=0
-        if i != '':
-            self.r=re.search('([1-9]{0,2})(\.{0,1})',i)
-            self.duration_=  60.0/self.tempo_*4/float(self.r.group(1))
-            if self.r.group(2) == '.':
-                self.halfduration_=1
-                
+            self.spectre_.append([sin[i][0]*height,sin[i][1]])            
+            
+    def computeDuration(self, duration):
+        if duration != None:
+            self.duration_ = 60.0/self.tempo_*4.0/float(duration)
+        else:
+            self.duration_ = 0.0
+                    
     def playTone(self, spectre, duration):
         self.interface_.playTone(spectre,duration)
         
     def playLySheet(self,sheet):
         l=re.split(' ', sheet)
         for i in range(len(l)):
-            n=re.search('([a-g\'isr,]+)([1-9\.]{0,2})',l[i])
-            if n!= None:
-                self.computeDuration_(n.group(2))
-                self.computeSpectre(n.group(1),self.timbre)
-                self.playTone(self.spectre_,self.duration_*(1+self.halfduration_*0.5)) 
+            self.note_ = self.parser_.getNote(l[i])
+            self.computeSpectre(self.note_.height,self.timbre)
+            self.computeDuration(self.note_.duration)
+            self.playTone(self.spectre_,self.duration_) 
   
 if __name__ == "__main__":
        
