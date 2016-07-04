@@ -11,10 +11,11 @@ from note import Note
 class LyParser(object):
     
     def __init__(self):
-        self.lyNote_=None # String to parse
-        self.r_=None # ==None if self.note_ isn't a valid Lylipond note
+        self.lyNote_ = None # String to parse
+        self.r_ = None # ==None if self.note_ isn't a valid Lylipond note
         
-        self.note_=Note(None,None)
+        self.note_ = Note(None,None)
+        self.lastDuration_ = None
         
     def computeHeight(self, lyNote, lyAccidental, lyOctave):        
         if lyNote == 'r': height=0.0
@@ -45,8 +46,23 @@ class LyParser(object):
         
         return height
         
-    def computeDuration(self, duration, halfDuration):
-        return 4
+    def computeDuration(self, lyDuration, lyHalfDuration):
+        if lyDuration == None:
+            duration = self.lastDuration_
+        if re.search('[0-9]{1,2}',lyDuration):
+            duration = int(lyDuration)
+        else:
+            print "Bad duration definition"
+
+        if lyHalfDuration == None:
+            self.lastDuration_=duration
+        elif lyHalfDuration == '.':
+            self.lastDuration_=duration
+            duration=int(1.5*duration)
+        else:
+            print "Bad half duration definition"
+
+        return duration
         
     def getNote(self, note):
         
@@ -63,3 +79,4 @@ if __name__ == "__main__":
     parser=LyParser()
     parser.getNote('aes\'2.')
     print parser.note_.height
+    print parser.note_.duration
