@@ -21,8 +21,6 @@ class MusicPython(object):
                
         # Harmony
         self.note_ = None
-        self.spectre_=None
-        self.data_=None
         
         # Rythm
         self.tempo_=60 # 60 noirs/minutes
@@ -50,23 +48,13 @@ class MusicPython(object):
         
     def computeSpectre(self, height, sin):
         if self.note_.height != None:
-            self.spectre_=[[sin[0][0]*height,sin[0][1]]]
+            spectre=[[sin[0][0]*height,sin[0][1]]]
             for i in range(len(sin)):
-                self.spectre_.append([sin[i][0]*height,sin[i][1]])   
+                spectre.append([sin[i][0]*height,sin[i][1]])   
         else:
-            self.spectre_ = [[0,1]]
+            spectre = [[0,1]]
             
-    def computeDuration(self, duration, f0):
-        if self.note_.duration != None:
-            self.duration_ = 60.0/self.tempo_*4.0/float(duration)
-        else:
-            self.duration_ = 0.0  
-            
-        numberofframes = int(self.interface_.bitrate * self.duration_)
-        if f0 != 0.0:
-            self.numberofperiods_ = int(self.duration_ * f0)
-        else:
-            self.numberofperiods_ = int(numberofframes)
+        return spectre
         
     def normalizeSpectre(self,sin):
         
@@ -82,21 +70,42 @@ class MusicPython(object):
         
         return sout        
         
-    def computeData(self, spectre):
+    def computeData(self, height, timbre):
         
-        if spectre[0][0] != 0.0:
-            periodlength = int(self.interface_.bitrate / spectre[0][0])
+        spectre = self.computeSpectre(height, timbre)
+        
+        f0 = spectre[0][0]
+        
+        if f0 != 0.0:
+            periodlength = int(self.interface_.bitrate / f0)
         else:
             periodlength = 1
         
-        s=self.normalizeSpectre(spectre)        
+        nSpectre=self.normalizeSpectre(spectre)        
         
-        self.data_=()        
+        data=()        
         for x in xrange(periodlength):  
             y = 0.0
-            for n in range(len(s)):
-                y+=s[n][1]*np.sin(2*np.pi*s[n][0]*x/self.interface_.bitrate)
-            self.data_+=(y,)
+            for n in range(len(nSpectre)):
+                y+=nSpectre[n][1]*np.sin(2*np.pi*nSpectre[n][0]*x/self.interface_.bitrate)
+            data+=(y,)
+            
+        return (data, f0)
+               
+    def computeDuration(self, duration, f0):
+        if duration != None:
+            self.duration_ = 60.0/self.tempo_*4.0/float(duration)
+        else:
+            self.duration_ = 0.0  
+            
+        numberofframes = int(self.interface_.bitrate * self.duration_)
+        
+        if f0 != 0.0:
+            numberofperiods = int(self.duration_ * f0)
+        else:
+            numberofperiods = int(numberofframes)
+            
+        return numberofperiods
                     
     def playTone(self, data, numberofperiods):      
         self.interface_.playData(data, numberofperiods)
@@ -105,10 +114,9 @@ class MusicPython(object):
         l=re.split(' ', sheet)
         for i in range(len(l)):
             self.note_ = self.parser_.getNote(l[i])
-            self.computeSpectre(self.note_.height,self.timbre)
-            self.computeDuration(self.note_.duration, self.spectre_[0][0])
-            self.computeData(self.spectre_)
-            self.playTone(self.data_, self.numberofperiods_)
+            (data, f0) = self.computeData(self.note_.height,self.timbre)            
+            numberofperiods = self.computeDuration(self.note_.duration, f0)
+            self.playTone(data, numberofperiods)
   
 if __name__ == "__main__":
        
