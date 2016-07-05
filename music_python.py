@@ -21,11 +21,13 @@ class MusicPython(object):
                
         # Harmony
         self.note_ = None
-        self.spectre_=None        
+        self.spectre_=None
+        self.data_=None
         
         # Rythm
         self.tempo_=60 # 60 noirs/minutes
         self.duration_=1.0
+        self.numberofperiods_=0.0
         
 #    def __del__(self):
         
@@ -54,11 +56,17 @@ class MusicPython(object):
         else:
             self.spectre_ = [[0,1]]
             
-    def computeDuration(self, duration):
+    def computeDuration(self, duration, f0):
         if self.note_.duration != None:
             self.duration_ = 60.0/self.tempo_*4.0/float(duration)
         else:
             self.duration_ = 0.0  
+            
+        numberofframes = int(self.interface_.bitrate * self.duration_)
+        if f0 != 0.0:
+            self.numberofperiods_ = int(self.duration_ * f0)
+        else:
+            self.numberofperiods_ = int(numberofframes)
         
     def normalizeSpectre(self,sin):
         
@@ -83,35 +91,24 @@ class MusicPython(object):
         
         s=self.normalizeSpectre(spectre)        
         
-        data=()        
+        self.data_=()        
         for x in xrange(periodlength):  
             y = 0.0
             for n in range(len(s)):
                 y+=s[n][1]*np.sin(2*np.pi*s[n][0]*x/self.interface_.bitrate)
-            data+=(y,) 
-        
-        return data
+            self.data_+=(y,)
                     
-    def playTone(self, spectre, duration):
-
-        numberofframes = int(self.interface_.bitrate * duration)
-        
-        if spectre[0][0] != 0.0:
-            numberofperiods = int(duration * spectre[0][0])
-        else:
-            numberofperiods = int(numberofframes)
-        
-        data=self.computeData(spectre)
-        
-        self.interface_.playData(data,numberofperiods)
+    def playTone(self, data, numberofperiods):      
+        self.interface_.playData(data, numberofperiods)
         
     def playLySheet(self,sheet):
         l=re.split(' ', sheet)
         for i in range(len(l)):
             self.note_ = self.parser_.getNote(l[i])
             self.computeSpectre(self.note_.height,self.timbre)
-            self.computeDuration(self.note_.duration)
-            self.playTone(self.spectre_,self.duration_)
+            self.computeDuration(self.note_.duration, self.spectre_[0][0])
+            self.computeData(self.spectre_)
+            self.playTone(self.data_, self.numberofperiods_)
   
 if __name__ == "__main__":
        
