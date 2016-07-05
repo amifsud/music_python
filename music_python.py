@@ -8,7 +8,6 @@ Created on Wed Jun 29 22:11:53 2016
 from interface_aport import InterfaceAport
 from timbre import Timbre
 from lylipond_parser import LyParser
-import numpy as np
 import re
 
 class MusicPython(object):
@@ -25,7 +24,6 @@ class MusicPython(object):
         # Rythm
         self.tempo_=60 # 60 noirs/minutes
         self.duration_=1.0
-        self.numberofperiods_=0.0
         
 #    def __del__(self):
         
@@ -45,53 +43,7 @@ class MusicPython(object):
         
     def saveTimbre(self, name, spectre):
         self.timbre_.saveTimbre(name,spectre)
-        
-    def computeSpectre(self, height, sin):
-        if self.note_.height != None:
-            spectre=[[sin[0][0]*height,sin[0][1]]]
-            for i in range(len(sin)):
-                spectre.append([sin[i][0]*height,sin[i][1]])   
-        else:
-            spectre = [[0,1]]
-            
-        return spectre
-        
-    def normalizeSpectre(self,sin):
-        
-        sum=0
-        for i in range(len(sin)-1):
-           sum += sin[i+1][1]
-           
-        sout=sin
-        sout[0][1]=1.0/(1.0+sum)
-        
-        for i in range(len(sin)-1):
-           sout[i+1][1]=sout[0][1]*sin[i+1][1]
-        
-        return sout        
-        
-    def computeData(self, height, timbre):
-        
-        spectre = self.computeSpectre(height, timbre)
-        
-        f0 = spectre[0][0]
-        
-        if f0 != 0.0:
-            periodlength = int(self.interface_.bitrate / f0)
-        else:
-            periodlength = 1
-        
-        nSpectre=self.normalizeSpectre(spectre)        
-        
-        data=()        
-        for x in xrange(periodlength):  
-            y = 0.0
-            for n in range(len(nSpectre)):
-                y+=nSpectre[n][1]*np.sin(2*np.pi*nSpectre[n][0]*x/self.interface_.bitrate)
-            data+=(y,)
-            
-        return (data, f0)
-               
+
     def computeDuration(self, duration, f0):
         if duration != None:
             self.duration_ = 60.0/self.tempo_*4.0/float(duration)
@@ -114,7 +66,7 @@ class MusicPython(object):
         l=re.split(' ', sheet)
         for i in range(len(l)):
             self.note_ = self.parser_.getNote(l[i])
-            (data, f0) = self.computeData(self.note_.height,self.timbre)            
+            (data, f0) = self.timbre_.computeData(self.note_.height,self.timbre, self.interface_.bitrate)            
             numberofperiods = self.computeDuration(self.note_.duration, f0)
             self.playTone(data, numberofperiods)
   
