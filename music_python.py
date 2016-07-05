@@ -8,6 +8,7 @@ Created on Wed Jun 29 22:11:53 2016
 from interface_aport import InterfaceAport
 from timbre import Timbre
 from lylipond_parser import LyParser
+import numpy as np
 import re
 
 class MusicPython(object):
@@ -52,9 +53,42 @@ class MusicPython(object):
             
     def computeDuration(self, duration):
         self.duration_ = 60.0/self.tempo_*4.0/float(duration)
+        
+    def normalizeSpectre(self,sin):
+        
+        sum=0
+        for i in range(len(sin)-1):
+           sum += sin[i+1][1]
+           
+        sout=sin
+        sout[0][1]=1.0/(1.0+sum)
+        
+        for i in range(len(sin)-1):
+           sout[i+1][1]=sout[0][1]*sin[i+1][1]
+        
+        return sout
                     
     def playTone(self, spectre, duration):
-        self.interface_.playTone(spectre,duration)
+        
+        bitrate=self.interface_.bitrate
+        numberofframes = int(bitrate * duration)
+        
+        if spectre[0][0] != 0.0:
+            numberofperiods = duration * spectre[0][0]
+            periodlength = int(numberofframes / numberofperiods)
+        else:
+            numberofperiods = 1
+            periodlength = int(numberofframes)
+        
+        s=self.normalizeSpectre(spectre)
+        data=()        
+        for x in xrange(periodlength):  
+            y = 0.0
+            for n in range(len(s)):
+                y+=s[n][1]*np.sin(2*np.pi*s[n][0]*x/bitrate)
+            data+=(y,)        
+        
+        self.interface_.playData(data,numberofperiods)
         
     def playLySheet(self,sheet):
         l=re.split(' ', sheet)
@@ -70,13 +104,13 @@ class MusicPython(object):
   
 if __name__ == "__main__":
        
-    sheet="{ a,4 ais, b, c, cis, d, dis, e, f, fis, g, gis, a4 ais b c cis d dis e f fis g gis a'4 ais' b' c' cis' d' dis' e' f' fis' g' gis' }"
+    #sheet="{ a,4 ais, b, c, cis, d, dis, e, f, fis, g, gis, a4 ais b c cis d dis e f fis g gis a'4 ais' b' c' cis' d' dis' e' f' fis' g' gis' }"
     #sheet="{ ais8 ais a g,16 f, f, d,8. c,4 f,2  }"
-    #sheet="{ r2 c,8 c, a4 g, f, g,2 e,4 f, r f, g,2 c,4 a b c g,2 e,8 e, f,4 e, d, c,2. r2. }"       
+    sheet="{ r2 c,8 c, a4 g, f, g,2 e,4 f, r f, g,2 c,4 a b c g,2 e,8 e, f,4 e, d, c,2. r2. }"       
     #sheet="{ c4 c c d e2 d c4 e d d c2 c4 c c d e2 d c4 e d d c2 d4 d d d a2 a d4 c b a g,2 c4 c c d e2 d c4 e d d c2}"
 
     music = MusicPython()
     music.timbre='violon'
-    music.tempo=60
+    music.tempo=100
     music.playLySheet(sheet)
         
