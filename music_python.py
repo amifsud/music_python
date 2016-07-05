@@ -76,6 +76,7 @@ if __name__ == "__main__":
     #sheet="{ c4 c c d e2 d c4 e d d c2 c4 c c d e2 d c4 e d d c2 d4 d d d a2 a d4 c b a g,2 c4 c c d e2 d c4 e d d c2}"
 
     music = MusicPython()
-    music.timbre='orgue'
+    music.timbre='violon'
+    music.tempo=100
     music.playLySheet(sheet)
         

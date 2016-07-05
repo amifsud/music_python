@@ -88,9 +88,12 @@ class InterfaceAport(object):
             for n in range(len(s)):
                 y+=s[n][1]*np.sin(2*np.pi*s[n][0]*x/self.bitrate_) 
             data+=chr(int(y*127+128))
-                
-        for x in xrange(int(numberofperiods)):
-            self.stream_.write(data)
+            
+        self.playData(data,numberofperiods)
+            
+    def playData(self, data, repetitions):
+        for x in xrange(int(repetitions)):
+            self.stream_.write(data)        
               
     def playWave(self, fileName):
         
