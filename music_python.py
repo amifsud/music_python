@@ -72,27 +72,36 @@ class MusicPython(object):
         for i in range(len(sin)-1):
            sout[i+1][1]=sout[0][1]*sin[i+1][1]
         
-        return sout
-                    
-    def playTone(self, spectre, duration):
+        return sout        
         
-        bitrate=self.interface_.bitrate
-        numberofframes = int(bitrate * duration)
+    def computeData(self, spectre):
         
         if spectre[0][0] != 0.0:
-            numberofperiods = duration * spectre[0][0]
-            periodlength = int(numberofframes / numberofperiods)
+            periodlength = int(self.interface_.bitrate / spectre[0][0])
         else:
-            numberofperiods = 1
-            periodlength = int(numberofframes)
+            periodlength = 1
         
-        s=self.normalizeSpectre(spectre)
+        s=self.normalizeSpectre(spectre)        
+        
         data=()        
         for x in xrange(periodlength):  
             y = 0.0
             for n in range(len(s)):
-                y+=s[n][1]*np.sin(2*np.pi*s[n][0]*x/bitrate)
-            data+=(y,)        
+                y+=s[n][1]*np.sin(2*np.pi*s[n][0]*x/self.interface_.bitrate)
+            data+=(y,) 
+        
+        return data
+                    
+    def playTone(self, spectre, duration):
+
+        numberofframes = int(self.interface_.bitrate * duration)
+        
+        if spectre[0][0] != 0.0:
+            numberofperiods = int(duration * spectre[0][0])
+        else:
+            numberofperiods = int(numberofframes)
+        
+        data=self.computeData(spectre)
         
         self.interface_.playData(data,numberofperiods)
         
@@ -100,10 +109,8 @@ class MusicPython(object):
         l=re.split(' ', sheet)
         for i in range(len(l)):
             self.note_ = self.parser_.getNote(l[i])
-
             self.computeSpectre(self.note_.height,self.timbre)
             self.computeDuration(self.note_.duration)
-                
             self.playTone(self.spectre_,self.duration_)
   
 if __name__ == "__main__":
@@ -115,6 +122,6 @@ if __name__ == "__main__":
 
     music = MusicPython()
     music.timbre='violon'
-    music.tempo=200
+    music.tempo=100
     music.playLySheet(sheet)
         
