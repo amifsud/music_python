@@ -47,12 +47,18 @@ class MusicPython(object):
         self.timbre_.saveTimbre(name,spectre)
         
     def computeSpectre(self, height, sin):
-        self.spectre_=[[sin[0][0]*height,sin[0][1]]]
-        for i in range(len(sin)):
-            self.spectre_.append([sin[i][0]*height,sin[i][1]])            
+        if self.note_.height != None:
+            self.spectre_=[[sin[0][0]*height,sin[0][1]]]
+            for i in range(len(sin)):
+                self.spectre_.append([sin[i][0]*height,sin[i][1]])   
+        else:
+            self.spectre_ = [[0,1]]
             
     def computeDuration(self, duration):
-        self.duration_ = 60.0/self.tempo_*4.0/float(duration)
+        if self.note_.duration != None:
+            self.duration_ = 60.0/self.tempo_*4.0/float(duration)
+        else:
+            self.duration_ = 0.0  
         
     def normalizeSpectre(self,sin):
         
@@ -94,13 +100,11 @@ class MusicPython(object):
         l=re.split(' ', sheet)
         for i in range(len(l)):
             self.note_ = self.parser_.getNote(l[i])
-            if self.note_.height != None and self.note_.duration != None:
-                self.computeSpectre(self.note_.height,self.timbre)
-                self.computeDuration(self.note_.duration)
-            else:
-                self.spectre_ = [[0,1]]
-                self.duration_ = 0.0
-            self.playTone(self.spectre_,self.duration_) 
+
+            self.computeSpectre(self.note_.height,self.timbre)
+            self.computeDuration(self.note_.duration)
+                
+            self.playTone(self.spectre_,self.duration_)
   
 if __name__ == "__main__":
        
@@ -111,6 +115,6 @@ if __name__ == "__main__":
 
     music = MusicPython()
     music.timbre='violon'
-    music.tempo=100
+    music.tempo=200
     music.playLySheet(sheet)
         
