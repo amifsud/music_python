@@ -70,13 +70,13 @@ class MusicPython(object):
   
 if __name__ == "__main__":
        
-    sheet="{ a,4 ais,8 b, c, cis, d, dis, e, f, fis, g, gis, a4 ais8 b c cis d dis e f fis g gis a'4 ais'8 b' c' cis' d' dis' e' f' fis' g' gis' }"
-    sheet="{ ais8 ais a g,16 f, f, d,8. c,4 f,2  }"
-    sheet="{ r2 c,8 c, a4 g, f, g,2 e,4 f, r f, g,2 c,4 a b c g,2 e,8 e, f,4 e, d, c,2. r2. }"       
+    sheet="{ a,4 ais, b, c, cis, d, dis, e, f, fis, g, gis, a4 ais b c cis d dis e f fis g gis a'4 ais' b' c' cis' d' dis' e' f' fis' g' gis' }"
+    #sheet="{ ais8 ais a g,16 f, f, d,8. c,4 f,2  }"
+    #sheet="{ r2 c,8 c, a4 g, f, g,2 e,4 f, r f, g,2 c,4 a b c g,2 e,8 e, f,4 e, d, c,2. r2. }"       
     #sheet="{ c4 c c d e2 d c4 e d d c2 c4 c c d e2 d c4 e d d c2 d4 d d d a2 a d4 c b a g,2 c4 c c d e2 d c4 e d d c2}"
 
     music = MusicPython()
     music.timbre='violon'
-    music.tempo=100
+    music.tempo=60
     music.playLySheet(sheet)
         

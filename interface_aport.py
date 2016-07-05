@@ -81,17 +81,22 @@ class InterfaceAport(object):
             periodlength = int(numberofframes)
         
         s=self.normalizeSpectre(sin)
-        data=''
-        
+        data=()        
         for x in xrange(periodlength):  
             y = 0.0
             for n in range(len(s)):
-                y+=s[n][1]*np.sin(2*np.pi*s[n][0]*x/self.bitrate_) 
-            data+=chr(int(y*127+128))
-            
+                y+=s[n][1]*np.sin(2*np.pi*s[n][0]*x/self.bitrate_)
+            data+=(y,)
+
         self.playData(data,numberofperiods)
             
-    def playData(self, data, repetitions):
+    def playData(self, dataIn, repetitions):
+        # Encodage
+        data=''
+        for x in xrange(int(len(dataIn))):
+            data+=chr(int(dataIn[x]*127+128))
+                        
+        # Playing data
         for x in xrange(int(repetitions)):
             self.stream_.write(data)        
               
