@@ -90,7 +90,7 @@ class LyParser(object):
         
     def getNote(self, lyNote):
         self.parseNote(lyNote)
-        return self.sheet_.lastNote
+        return self.sheet_.lastAddedNote
         
     def parseSheet(self, lySheet):
         

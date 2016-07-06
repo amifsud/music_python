@@ -12,24 +12,44 @@ class Sheet(object):
     def __init__(self,):
         
         self.notes_ = ()
-        self.lastNoteIndex_ = None
+        self.lastAddedNoteIndex_ = None
+        self.lastPlayedNoteIndex_ = 0
         self.lastTimeDiv_ = None
         
     @property
-    def lastNote(self):
-        if self.lastNoteIndex_ != None:
-            return self.notes_[self.lastNoteIndex_]
+    def lastAddedNote(self):
+        if self.lastAddedNoteIndex_ != None:
+            return self.notes_[self.lastAddedNoteIndex_]
         else:
             return Note(None, None)
+            
+    @property
+    def lastPlayedNote(self):           
+        if self.lastPlayedNoteIndex_ <= self.lastAddedNoteIndex_:
+            note = self.notes_[self.lastPlayedNoteIndex_]
+            self.lastPlayedNoteIndex_ += 1
+        else:
+            if self.lastPlayedNoteIndex_ != 0:
+                print "No more note"
+                note = Note(None, None)
+            else:
+                print "Still no note"
+                note = Note(None, None)
+
+        return note
 
     def addNote(self, height, timeDiv):
-        if self.lastNoteIndex_ !=None:
-            self.lastNoteIndex_+=1
+        if self.lastAddedNoteIndex_ !=None:
+            self.lastAddedNoteIndex_+=1
         else:
-            self.lastNoteIndex_ = 0
+            self.lastAddedNoteIndex_ = 0
         self.notes_ += (Note(height,timeDiv),)
         
     def addEnd(self):
+        if self.lastAddedNoteIndex_ !=None:
+            self.lastAddedNoteIndex_+=1
+        else:
+            self.lastAddedNoteIndex_ = 0
         self.notes_ += ('end',)
         
 if __name__ == "__main__":
