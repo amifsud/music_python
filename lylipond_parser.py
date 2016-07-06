@@ -70,9 +70,9 @@ class LyParser(object):
             self.sheet_= Sheet()
         else:
             print "Bad lilypond command"
-        
-    def getNote(self, lyNote):
-        
+            
+    def parseNote(self, lyNote):
+                
         self.lyNote_=lyNote
         self.r_=re.search('([a-gr](?!s)){1}([ei]s){,1}([\',]){,1}([1-9]){,2}(\.){,1}',self.lyNote_)
  
@@ -85,9 +85,20 @@ class LyParser(object):
                 print "No sheet created"
         else:
             self.parseCommand(lyNote)
-            
+        
+    def getNote(self, lyNote):
+        self.parseNote(lyNote)
         return self.sheet_.lastNote
-                 
+        
+    def parseSheet(self, lySheet):
+        
+        l=re.split(' ', lySheet)
+        for i in range(len(l)):
+            self.parseNote(l[i])
+            
+    def getSheet(self, lySheet):
+        self.parseSheet(lySheet)
+        return self.sheet_
         
 if __name__ == "__main__":
     
