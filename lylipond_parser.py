@@ -7,14 +7,15 @@ Created on Mon Jul  4 18:28:54 2016
 
 import re
 from note import Note
+from sheet import Sheet
 
 class LyParser(object):
     
     def __init__(self):
         self.lyNote_ = None # String to parse
         self.r_ = None # ==None if self.note_ isn't a valid Lylipond note
-        
-        self.note_ = Note(None,None)
+
+        self.sheet_ = None
         self.lastTimeDiv_ = None
         
     def computeHeight(self, lyNote, lyAccidental, lyOctave):        
@@ -64,19 +65,28 @@ class LyParser(object):
 
         return timeDiv
         
+    def parseCommand(self, lyCommand):
+        if lyCommand == '{':
+            self.sheet_= Sheet()
+        else:
+            print "Bad lilypond command"
+        
     def getNote(self, lyNote):
         
         self.lyNote_=lyNote
         self.r_=re.search('([a-gr](?!s)){1}([ei]s){,1}([\',]){,1}([1-9]){,2}(\.){,1}',self.lyNote_)
  
         if self.r_ != None:
-            self.note_.height=self.computeHeight(self.r_.group(1),self.r_.group(2),self.r_.group(3))
-            self.note_.timeDiv=self.computeTimeDiv(self.r_.group(4),self.r_.group(5))
+            if self.sheet_ != None:
+                height=self.computeHeight(self.r_.group(1),self.r_.group(2),self.r_.group(3))
+                timeDiv=self.computeTimeDiv(self.r_.group(4),self.r_.group(5))
+                self.sheet_.addNote(height,timeDiv)
+            else:
+                print "No sheet created"
         else:
-            self.note_.height=None
-            self.note_.timeDiv=None
+            self.parseCommand(lyNote)
             
-        return self.note_
+        return self.sheet_.lastNote
                  
         
 if __name__ == "__main__":
