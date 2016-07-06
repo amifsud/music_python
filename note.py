@@ -18,10 +18,10 @@ class Note(object):
         self.height_=x
         
     @property
-    def duration(self):
+    def timeDiv(self):
         return self.duration_
-    @duration.setter
-    def duration(self, x):
+    @timeDiv.setter
+    def timeDiv(self, x):
         self.duration_=x
         
 if __name__ == "__main__":

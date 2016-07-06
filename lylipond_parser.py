@@ -15,7 +15,7 @@ class LyParser(object):
         self.r_ = None # ==None if self.note_ isn't a valid Lylipond note
         
         self.note_ = Note(None,None)
-        self.lastDuration_ = None
+        self.lastTimeDiv_ = None
         
     def computeHeight(self, lyNote, lyAccidental, lyOctave):        
         if lyNote == 'r': height=0.0
@@ -46,23 +46,23 @@ class LyParser(object):
         
         return height
         
-    def computeDuration(self, lyDuration, lyHalfDuration):
-        if lyDuration == None:
-            duration = self.lastDuration_
-        elif re.search('[0-9]{1,2}',lyDuration):
-            duration = float(lyDuration)
+    def computeTimeDiv(self, lyTimeDiv, lyHalfTimeDiv):
+        if lyTimeDiv == None:
+            timeDiv = self.lastTimeDiv_
+        elif re.search('[0-9]{1,2}',lyTimeDiv):
+            timeDiv = float(lyTimeDiv)
         else:
             print "Bad duration definition"
 
-        if lyHalfDuration == None:
-            self.lastDuration_=duration
-        elif lyHalfDuration == '.':
-            self.lastDuration_=duration
-            duration=float(2/3.0*duration)
+        if lyHalfTimeDiv == None:
+            self.lastTimeDiv_=timeDiv
+        elif lyHalfTimeDiv == '.':
+            self.lastTimeDiv_ = timeDiv
+            timeDiv=float(2/3.0*timeDiv)
         else:
             print "Bad half duration definition"
 
-        return duration
+        return timeDiv
         
     def getNote(self, lyNote):
         
@@ -71,10 +71,10 @@ class LyParser(object):
  
         if self.r_ != None:
             self.note_.height=self.computeHeight(self.r_.group(1),self.r_.group(2),self.r_.group(3))
-            self.note_.duration_=self.computeDuration(self.r_.group(4),self.r_.group(5))
+            self.note_.timeDiv=self.computeTimeDiv(self.r_.group(4),self.r_.group(5))
         else:
             self.note_.height=None
-            self.note_.duration=None
+            self.note_.timeDiv=None
             
         return self.note_
                  
@@ -84,4 +84,4 @@ if __name__ == "__main__":
     parser=LyParser()
     parser.getNote('aes\'2.')
     print parser.note_.height
-    print parser.note_.duration
+    print parser.note_.timeDiv
