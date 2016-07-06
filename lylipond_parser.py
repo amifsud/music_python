@@ -67,7 +67,9 @@ class LyParser(object):
         
     def parseCommand(self, lyCommand):
         if lyCommand == '{':
-            self.sheet_= Sheet()
+            self.sheet_ = Sheet()
+        elif lyCommand == '}':
+            self.sheet_.addEnd()
         else:
             print "Bad lilypond command"
             

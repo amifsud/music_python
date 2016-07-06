@@ -63,11 +63,18 @@ class MusicPython(object):
         self.interface_.playData(data, numberofperiods)
         
     def playLySheet(self,sheet):
+        
          self.sheet_ = self.parser_.getSheet(sheet)
-         for i in range(len(self.sheet_.notes_)):
-            (data, f0) = self.timbre_.computeData(self.sheet_.notes_[i].height,self.timbre, self.interface_.bitrate)            
-            numberofperiods = self.computeDuration(self.sheet_.notes_[i].timeDiv, f0)
-            self.playTone(data, numberofperiods)
+         
+         i=0
+         while True:
+             if self.sheet_.lastNote != 'end':
+                (data, f0) = self.timbre_.computeData(self.sheet_.notes_[i].height,self.timbre, self.interface_.bitrate)            
+                numberofperiods = self.computeDuration(self.sheet_.notes_[i].timeDiv, f0)
+                self.playTone(data, numberofperiods)
+                i+=1
+             else:
+                break
   
 if __name__ == "__main__":
        

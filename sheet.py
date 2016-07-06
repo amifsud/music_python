@@ -29,6 +29,9 @@ class Sheet(object):
             self.lastNoteIndex_ = 0
         self.notes_ += (Note(height,timeDiv),)
         
+    def addEnd(self):
+        self.notes_ += ('end',)
+        
 if __name__ == "__main__":
     
     l=()
