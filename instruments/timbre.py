@@ -25,12 +25,12 @@ class Timbre(object):
             self.spectre_=x
         
     def saveTimbre(self, name, spectre):
-        self.timbres = shelve.open('timbres')
+        self.timbres = shelve.open('data/timbres')
         self.timbres[name]={'spectre': spectre}
         self.timbres.close()
         
     def setTimbre(self, name):
-        self.timbres = shelve.open('timbres')
+        self.timbres = shelve.open('data/timbres')
         self.spectre_=self.timbres[name]['spectre']
         self.timbres.close()
         
