@@ -5,9 +5,9 @@ Created on Wed Jun 29 22:11:53 2016
 @author: alexis
 """
 
-from interface_aport import InterfaceAport
+from interfacage.interface_aport import InterfaceAport
+from interfacage.lylipond_parser import LyParser
 from timbre import Timbre
-from lylipond_parser import LyParser
 
 class MusicPython(object):
     
