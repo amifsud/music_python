@@ -6,8 +6,7 @@ Created on Mon Jul  4 18:28:54 2016
 """
 
 import re
-from note import Note
-from sheet import Sheet
+from music.sheet import Sheet
 
 class LyParser(object):
     
