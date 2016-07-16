@@ -17,12 +17,7 @@ class MusicPython(object):
         self.parser_ = LyParser()
         self.timbre_ = Timbre()        
                
-        # Harmony
-        self.note_ = None
-        
-        # Rythm
         self.tempo_=60 # 60 noirs/minutes
-        self.duration_=1.0
         
 #    def __del__(self):
         
@@ -45,15 +40,14 @@ class MusicPython(object):
 
     def computeDuration(self, timeDiv, f0):
         if timeDiv != None:
-            self.duration_ = 60.0/self.tempo_*4.0/float(timeDiv)
+            duration = 60.0/self.tempo_*4.0/float(timeDiv)
         else:
-            self.duration_ = 0.0  
-            
-        numberofframes = int(self.interface_.bitrate * self.duration_)
+            duration = 0.0  
         
         if f0 != 0.0:
-            numberofperiods = int(self.duration_ * f0)
+            numberofperiods = int(duration * f0)
         else:
+            numberofframes = int(self.interface_.bitrate * duration)
             numberofperiods = int(numberofframes)
             
         return numberofperiods
@@ -85,5 +79,40 @@ if __name__ == "__main__":
     music = MusicPython()
     music.timbre='violon'
     music.tempo=100
-    music.playLySheet(sheet)
+    music.interface_.bitrate = 44000
+    #music.playLySheet(sheet)
+    
+    import matplotlib.pyplot as plt
+    import numpy as np
+    
+    def upsampling(bitrate, data):
+        
+        size= int(bitrate/data[1])
+        data1 = [0.0]*size
+        
+        u=0
+        for i in np.arange(0, int(size), int(size/len(data[0]))):
+            data1[i]=data[0][u]
+            u+=1
+
+        return (tuple(data1),bitrate)
+    
+    n=3
+    f=440.0
+    bitratein = 4.0
+    bitrateout = 44000.0
+    
+    data=music.timbre_.computeData(f, music.timbre, bitratein*f)
+    datax = np.arange(0., n, 1/bitratein)
+    
+    plt.plot(datax, n*data[0], 'ro') 
+    
+    data1 = upsampling(bitrateout, data)
+    datax1 = np.arange(0., n, f/bitrateout)
+    
+    plt.plot(datax1, n*data1[0], 'bx')
+    plt.show()
+    
+    
+    
        
