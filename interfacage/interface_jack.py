@@ -18,4 +18,8 @@ if __name__ == "__main__":
     
     print interface.client.get_ports()
         
+    interface.client.activate()
     
+    # WE need to launch a2j -e and gmidimonitor before
+    interface.client.connect("a2j:XP MIDI mate [24] (capture): XP MIDI mate MIDI 1", 
+                             "a2j:MIDI monitor [132] (playback): midi in")
