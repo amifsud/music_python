@@ -94,6 +94,8 @@ if __name__ == "__main__":
         for i in np.arange(0, int(size), int(size/len(data[0]))):
             data1[i]=data[0][u]
             u+=1
+            
+        
 
         return (tuple(data1),bitrate)
     
