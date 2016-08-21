@@ -44,8 +44,7 @@ class Timbre(object):
             
         return spectre
         
-    def normalizeSpectre(self,sin):
-        
+    def normalizeSpectre(self,sin):      
         sum=0
         for i in range(len(sin)-1):
            sum += sin[i+1][1]
@@ -58,8 +57,7 @@ class Timbre(object):
         
         return sout        
         
-    def computeData(self, height, timbre, bitrate):
-        
+    def computeData(self, height, timbre, bitrate):      
         spectre = self.computeSpectre(height, timbre)
         
         f0 = spectre[0][0]
