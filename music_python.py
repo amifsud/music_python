@@ -5,28 +5,30 @@ Created on Wed Jun 29 22:11:53 2016
 @author: alexis
 """
 
-from interfacage.interface_aport import InterfaceAport
-from interfacage.lylipond_parser import LyParser
 from instruments.timbre import Timbre
 from music.scale import Scale
+from player.player import Player
 
 class MusicPython(object):
     
     def __init__(self):
         
-        self.interface_ = InterfaceAport()
-        self.parser_ = LyParser()
         self.timbre_ = Timbre()
+        self.player_ = Player(self.timbre_)
         self.sheet_ = None
         
         self.tempo_=60 # 60 noirs/minutes
 
     @property
+    def player(self):
+        return self.player_
+
+    @property
     def tempo(self):
-        return self.tempo_
+        return self.player_.tempo
     @tempo.setter
     def tempo(self, x):
-        self.tempo_=x 
+        self.player_.tempo=x 
 
     @property
     def timbre(self):
@@ -38,36 +40,6 @@ class MusicPython(object):
     def saveTimbre(self, name, spectre):
         self.timbre_.saveTimbre(name,spectre)
 
-    def playTone(self, data, duration, bitrate):
-        
-        if len(data) != 1:
-            numberofperiods = int(duration * bitrate / float(len(data)))
-        else:
-            numberofperiods = int(bitrate * duration)
-            
-        self.interface_.playData(data, numberofperiods)
-        
-    def playSheet(self, sheet):
-         end = False
-         while end != True:
-             note = sheet.lastPlayedNote
-             if  note != 'end':
-                duration = sheet.computeDuration(note.timeDiv)                 
-                data = self.timbre_.computeData(note.height, self.interface_.bitrate)            
-                self.playTone(data, duration, self.interface_.bitrate)
-             else:
-                end = True        
-        
-    def playLySheet(self,lySheet):   
-         self.sheet_ = self.parser_.getSheet(lySheet)
-         self.sheet_.tempo = self.tempo_
-         self.playSheet(self.sheet_)
-                
-    def playScale(self,scale):        
-         self.sheet_ = scale.getScale()
-         self.sheet_.tempo = self.tempo_         
-         self.playSheet(self.sheet_)
-  
 if __name__ == "__main__":
        
     #sheet="{ a,4 ais, b, c, cis, d, dis, e, f, fis, g, gis, a4 ais b c cis d dis e f fis g gis a'4 ais' b' c' cis' d' dis' e' f' fis' g' gis' }"
@@ -76,17 +48,18 @@ if __name__ == "__main__":
     #sheet="{ c4 c c d e2 d c4 e d d c2 c4 c c d e2 d c4 e d d c2 d4 d d d a2 a d4 c b a g,2 c4 c c d e2 d c4 e d d c2 }"
         
     music = MusicPython()
+    
     music.timbre='violon'
     music.tempo=200
-    music.interface_.bitrate = 44000
+    music.player.interface_.bitrate = 44000
     
     scale = Scale()
     scale.tonality_ = 440.0
     scale.setMajorMode()
-    music.playScale(scale)
+    music.player.playScale(scale)
     
     music.timbre='violon'
-    music.playLySheet(sheet)
+    music.player.playLySheet(sheet)
     
 #==============================================================================
 #     import matplotlib.pyplot as plt
