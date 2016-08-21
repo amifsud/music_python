@@ -16,19 +16,18 @@ class MusicPython(object):
         
         self.interface_ = InterfaceAport()
         self.parser_ = LyParser()
-        self.timbre_ = Timbre()        
-               
+        self.timbre_ = Timbre()
+        self.sheet_ = None
+        
         self.tempo_=60 # 60 noirs/minutes
-        
-#    def __del__(self):
-        
+
     @property
     def tempo(self):
         return self.tempo_
     @tempo.setter
     def tempo(self, x):
-        self.tempo_=x
-        
+        self.tempo_=x 
+
     @property
     def timbre(self):
         return self.timbre_.spectre   
@@ -39,14 +38,6 @@ class MusicPython(object):
     def saveTimbre(self, name, spectre):
         self.timbre_.saveTimbre(name,spectre)
 
-    def computeDuration(self, timeDiv):
-        if timeDiv != None:
-            duration = 60.0/self.tempo_*4.0/float(timeDiv)
-        else:
-            duration = 0.0  
-                   
-        return duration
-                    
     def playTone(self, data, duration, bitrate):
         
         if len(data) != 1:
@@ -61,7 +52,7 @@ class MusicPython(object):
          while end != True:
              note = sheet.lastPlayedNote
              if  note != 'end':
-                duration = self.computeDuration(note.timeDiv)                 
+                duration = sheet.computeDuration(note.timeDiv)                 
                 data = self.timbre_.computeData(note.height, self.interface_.bitrate)            
                 self.playTone(data, duration, self.interface_.bitrate)
              else:
@@ -69,10 +60,12 @@ class MusicPython(object):
         
     def playLySheet(self,lySheet):   
          self.sheet_ = self.parser_.getSheet(lySheet)
+         self.sheet_.tempo = self.tempo_
          self.playSheet(self.sheet_)
                 
     def playScale(self,scale):        
          self.sheet_ = scale.getScale()
+         self.sheet_.tempo = self.tempo_         
          self.playSheet(self.sheet_)
   
 if __name__ == "__main__":
@@ -84,13 +77,13 @@ if __name__ == "__main__":
         
     music = MusicPython()
     music.timbre='violon'
-    music.tempo=100
+    music.tempo=200
     music.interface_.bitrate = 44000
     
     scale = Scale()
     scale.tonality_ = 440.0
     scale.setMajorMode()
-    #music.playScale(scale)
+    music.playScale(scale)
     
     music.timbre='violon'
     music.playLySheet(sheet)
