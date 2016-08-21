@@ -8,6 +8,7 @@ Created on Wed Jun 29 22:11:53 2016
 from interfacage.interface_aport import InterfaceAport
 from interfacage.lylipond_parser import LyParser
 from instruments.timbre import Timbre
+from music.scale import Scale
 
 class MusicPython(object):
     
@@ -55,33 +56,24 @@ class MusicPython(object):
     def playTone(self, data, numberofperiods):      
         self.interface_.playData(data, numberofperiods)
         
-    def playLySheet(self,sheet):
-        
-         self.sheet_ = self.parser_.getSheet(sheet)
-
+    def playSheet(self, sheet):
          end = False
          while end != True:
-             note = self.sheet_.lastPlayedNote
-             if  note != 'end':
-                (data, f0) = self.timbre_.computeData(note.height,self.timbre, self.interface_.bitrate)            
-                numberofperiods = self.computeDuration(note.timeDiv, f0)
-                self.playTone(data, numberofperiods)
-             else:
-                end = True
-                
-    def playScale(self,scale):
-        
-         self.sheet_ = scale.getScale()
-
-         end = False
-         while end != True:
-             note = self.sheet_.lastPlayedNote
+             note = sheet.lastPlayedNote
              if  note != 'end':
                 (data, f0) = self.timbre_.computeData(note.height,self.timbre, self.interface_.bitrate)            
                 numberofperiods = self.computeDuration(note.timeDiv, f0)
                 self.playTone(data, numberofperiods)
              else:
                 end = True        
+        
+    def playLySheet(self,sheet):   
+         self.sheet_ = self.parser_.getSheet(sheet)
+         self.playSheet(self.sheet_)
+                
+    def playScale(self,scale):        
+         self.sheet_ = scale.getScale()
+         self.playSheet(self.sheet_)
   
 if __name__ == "__main__":
        
@@ -95,7 +87,6 @@ if __name__ == "__main__":
     music.tempo=100
     music.interface_.bitrate = 44000
     
-    from music.scale import Scale
     scale = Scale()
     scale.tonality_ = 440.0
     scale.setMajorScale()
