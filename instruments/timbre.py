@@ -76,7 +76,7 @@ class Timbre(object):
                 y+=nSpectre[n][1]*np.sin(2*np.pi*nSpectre[n][0]*x/bitrate)
             data+=(y,)
             
-        return (data, f0)
+        return data
         
         
 if __name__ == "__main__":

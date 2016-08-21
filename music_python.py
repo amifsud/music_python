@@ -47,12 +47,12 @@ class MusicPython(object):
                    
         return duration
                     
-    def playTone(self, data, f0, duration):
-
-        if f0 != 0.0:
-            numberofperiods = int(duration * f0)
+    def playTone(self, data, duration, bitrate):
+        
+        if len(data) != 1:
+            numberofperiods = int(duration * bitrate / float(len(data)))
         else:
-            numberofperiods = int(self.interface_.bitrate * duration)
+            numberofperiods = int(bitrate * duration)
             
         self.interface_.playData(data, numberofperiods)
         
@@ -61,9 +61,9 @@ class MusicPython(object):
          while end != True:
              note = sheet.lastPlayedNote
              if  note != 'end':
-                (data, f0) = self.timbre_.computeData(note.height, self.interface_.bitrate)            
-                duration = self.computeDuration(note.timeDiv)
-                self.playTone(data, f0, duration)
+                duration = self.computeDuration(note.timeDiv)                 
+                data = self.timbre_.computeData(note.height, self.interface_.bitrate)            
+                self.playTone(data, duration, self.interface_.bitrate)
              else:
                 end = True        
         
