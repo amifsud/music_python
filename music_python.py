@@ -68,6 +68,20 @@ class MusicPython(object):
                 self.playTone(data, numberofperiods)
              else:
                 end = True
+                
+    def playScale(self,scale):
+        
+         self.sheet_ = scale.getScale()
+
+         end = False
+         while end != True:
+             note = self.sheet_.lastPlayedNote
+             if  note != 'end':
+                (data, f0) = self.timbre_.computeData(note.height,self.timbre, self.interface_.bitrate)            
+                numberofperiods = self.computeDuration(note.timeDiv, f0)
+                self.playTone(data, numberofperiods)
+             else:
+                end = True        
   
 if __name__ == "__main__":
        
@@ -80,40 +94,51 @@ if __name__ == "__main__":
     music.timbre='violon'
     music.tempo=100
     music.interface_.bitrate = 44000
+    
+    from music.scale import Scale
+    scale = Scale()
+    scale.tonality_ = 440.0
+    scale.setMajorScale()
+    
+    music.playScale(scale)
+    
+    
     #music.playLySheet(sheet)
     
-    import matplotlib.pyplot as plt
-    import numpy as np
-    
-    def upsampling(bitrate, data):
-        
-        size= int(bitrate/data[1])
-        data1 = [0.0]*size
-        
-        u=0
-        for i in np.arange(0, int(size), int(size/len(data[0]))):
-            data1[i]=data[0][u]
-            u+=1
-            
-        
-
-        return (tuple(data1),bitrate)
-    
-    n=3
-    f=440.0
-    bitratein = 4.0
-    bitrateout = 44000.0
-    
-    data=music.timbre_.computeData(f, music.timbre, bitratein*f)
-    datax = np.arange(0., n, 1/bitratein)
-    
-    plt.plot(datax, n*data[0], 'ro') 
-    
-    data1 = upsampling(bitrateout, data)
-    datax1 = np.arange(0., n, f/bitrateout)
-    
-    plt.plot(datax1, n*data1[0], 'bx')
-    plt.show()
+#==============================================================================
+#     import matplotlib.pyplot as plt
+#     import numpy as np
+#     
+#     def upsampling(bitrate, data):
+#         
+#         size= int(bitrate/data[1])
+#         data1 = [0.0]*size
+#         
+#         u=0
+#         for i in np.arange(0, int(size), int(size/len(data[0]))):
+#             data1[i]=data[0][u]
+#             u+=1
+#             
+#         
+# 
+#         return (tuple(data1),bitrate)
+#     
+#     n=3
+#     f=440.0
+#     bitratein = 4.0
+#     bitrateout = 44000.0
+#     
+#     data=music.timbre_.computeData(f, music.timbre, bitratein*f)
+#     datax = np.arange(0., n, 1/bitratein)
+#     
+#     plt.plot(datax, n*data[0], 'ro') 
+#     
+#     data1 = upsampling(bitrateout, data)
+#     datax1 = np.arange(0., n, f/bitrateout)
+#     
+#     plt.plot(datax1, n*data1[0], 'bx')
+#     plt.show()
+#==============================================================================
     
     
     
