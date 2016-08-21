@@ -57,8 +57,8 @@ class Timbre(object):
         
         return sout        
         
-    def computeData(self, height, timbre, bitrate):      
-        spectre = self.computeSpectre(height, timbre)
+    def computeData(self, height, bitrate):      
+        spectre = self.computeSpectre(height, self.spectre_)
         
         f0 = spectre[0][0]
         

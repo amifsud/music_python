@@ -61,7 +61,7 @@ class MusicPython(object):
          while end != True:
              note = sheet.lastPlayedNote
              if  note != 'end':
-                (data, f0) = self.timbre_.computeData(note.height,self.timbre, self.interface_.bitrate)            
+                (data, f0) = self.timbre_.computeData(note.height, self.interface_.bitrate)            
                 numberofperiods = self.computeDuration(note.timeDiv, f0)
                 self.playTone(data, numberofperiods)
              else:
@@ -78,9 +78,9 @@ class MusicPython(object):
 if __name__ == "__main__":
        
     #sheet="{ a,4 ais, b, c, cis, d, dis, e, f, fis, g, gis, a4 ais b c cis d dis e f fis g gis a'4 ais' b' c' cis' d' dis' e' f' fis' g' gis' }"
-    #sheet="{ ais8 ais a g,16 f, f, d,8. c,4 f,2  }"
+    #sheet="{ ais8 ais a g,16 f, f, d,8. c,4 f,2 }"
     sheet="{ r2 c,8 c, a4 g, f, g,2 e,4 f, r f, g,2 c,4 a b c g,2 e,8 e, f,4 e, d, c,2. r2. }"       
-    #sheet="{ c4 c c d e2 d c4 e d d c2 c4 c c d e2 d c4 e d d c2 d4 d d d a2 a d4 c b a g,2 c4 c c d e2 d c4 e d d c2}"
+    #sheet="{ c4 c c d e2 d c4 e d d c2 c4 c c d e2 d c4 e d d c2 d4 d d d a2 a d4 c b a g,2 c4 c c d e2 d c4 e d d c2 }"
         
     music = MusicPython()
     music.timbre='violon'
@@ -90,11 +90,10 @@ if __name__ == "__main__":
     scale = Scale()
     scale.tonality_ = 440.0
     scale.setMajorMode()
+    #music.playScale(scale)
     
-    music.playScale(scale)
-    
-    
-    #music.playLySheet(sheet)
+    music.timbre='violon'
+    music.playLySheet(sheet)
     
 #==============================================================================
 #     import matplotlib.pyplot as plt
