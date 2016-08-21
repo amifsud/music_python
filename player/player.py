@@ -28,7 +28,14 @@ class Player(object):
         return self.timbre_.spectre   
     @timbre.setter
     def timbre(self, x):
-        self.timbre_.spectre=x        
+        self.timbre_.spectre=x
+        
+    @property
+    def interface(self):
+        return self.interface_
+    @interface.setter
+    def interface(self, x):
+        self.interface_=x         
         
     def playTone(self, data, duration, bitrate):
         

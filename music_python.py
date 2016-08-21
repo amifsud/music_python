@@ -13,7 +13,7 @@ if __name__ == "__main__":
         
     instrument = Timbre()
     player = Player(instrument)
-    player.interface_.bitrate = 44000
+    player.interface.bitrate = 44000
     
     instrument.spectre = 'violon'
     player.tempo = 200
