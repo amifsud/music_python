@@ -90,7 +90,7 @@ class InterfaceAport(object):
 
         self.playData(data,numberofperiods)
                   
-    def playData(self, dataIn, repetitions):
+    def playData(self, dataIn, repetitions=1):
         # Encodage
         data=''
         for x in xrange(int(len(dataIn))):

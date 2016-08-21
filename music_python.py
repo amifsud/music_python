@@ -39,21 +39,21 @@ class MusicPython(object):
     def saveTimbre(self, name, spectre):
         self.timbre_.saveTimbre(name,spectre)
 
-    def computeDuration(self, timeDiv, f0):
+    def computeDuration(self, timeDiv):
         if timeDiv != None:
             duration = 60.0/self.tempo_*4.0/float(timeDiv)
         else:
             duration = 0.0  
-        
+                   
+        return duration
+                    
+    def playTone(self, data, f0, duration):
+
         if f0 != 0.0:
             numberofperiods = int(duration * f0)
         else:
-            numberofframes = int(self.interface_.bitrate * duration)
-            numberofperiods = int(numberofframes)
+            numberofperiods = int(self.interface_.bitrate * duration)
             
-        return numberofperiods
-                    
-    def playTone(self, data, numberofperiods):      
         self.interface_.playData(data, numberofperiods)
         
     def playSheet(self, sheet):
@@ -62,13 +62,13 @@ class MusicPython(object):
              note = sheet.lastPlayedNote
              if  note != 'end':
                 (data, f0) = self.timbre_.computeData(note.height, self.interface_.bitrate)            
-                numberofperiods = self.computeDuration(note.timeDiv, f0)
-                self.playTone(data, numberofperiods)
+                duration = self.computeDuration(note.timeDiv)
+                self.playTone(data, f0, duration)
              else:
                 end = True        
         
-    def playLySheet(self,sheet):   
-         self.sheet_ = self.parser_.getSheet(sheet)
+    def playLySheet(self,lySheet):   
+         self.sheet_ = self.parser_.getSheet(lySheet)
          self.playSheet(self.sheet_)
                 
     def playScale(self,scale):        
