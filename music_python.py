@@ -89,7 +89,7 @@ if __name__ == "__main__":
     
     scale = Scale()
     scale.tonality_ = 440.0
-    scale.setMajorScale()
+    scale.setMajorMode()
     
     music.playScale(scale)
     

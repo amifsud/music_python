@@ -13,7 +13,7 @@ class Scale(object):
         self.mode_ = ()
         self.scale_ = Sheet()
         
-    def setMajorScale(self):
+    def setMajorMode(self):
         self.mode_ = (1.0, pow(2,2.0/12.0), pow(2,4.0/12.0), pow(2,5.0/12.0), pow(2,7.0/12.0), pow(2,9.0/12.0), pow(2,11.0/12.0), 2.0)
         
     def getScale(self):
@@ -28,7 +28,7 @@ class Scale(object):
 if __name__ == "__main__":
     
     scale = Scale()
-    scale.setMajorScale()
+    scale.setMajorMode()
     
     print scale.tonality
     
