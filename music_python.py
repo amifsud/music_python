@@ -5,12 +5,16 @@ Created on Wed Jun 29 22:11:53 2016
 @author: alexis
 """
 
+from interfacage.interface_aport import InterfaceAport
 from instruments.timbre import Timbre
 from music.scale import Scale
 from player.player import Player
 
+interface = InterfaceAport()
+interface.bitrate = 44000 # bitrate for the interface
+
 instrument = Timbre('violon') # Defining an instrument  
-player = Player() # Defining a player and giving it an interface
+player = Player(interface) # Defining a player and giving it an interface
 player.interface.bitrate = 44000 # bitrate for the interface
 
 player.instrument = instrument # giving an instrument to the player

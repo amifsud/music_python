@@ -5,16 +5,13 @@ Created on Mon Aug 22 01:08:11 2016
 @author: alexis
 """
 
-from interfacage.interface_aport import InterfaceAport
 from interfacage.lylipond_parser import LyParser
 
 class Player(object):
-    def __init__(self):
-        self.interface_ = InterfaceAport()
+    def __init__(self, interface):
+        self.interface_ = interface
         self.parser_ = LyParser()        
         self.timbre_ = None
-        
-        self.tempo_=60 # 60 noirs/minutes
 
     @property
     def tempo(self):
@@ -36,13 +33,6 @@ class Player(object):
     @instrument.setter
     def instrument(self, x):
         self.timbre_=x
-        
-    @property
-    def interface(self):
-        return self.interface_
-    @interface.setter
-    def interface(self, x):
-        self.interface_=x         
         
     def playTone(self, data, duration, bitrate):
         
@@ -67,12 +57,12 @@ class Player(object):
              else:
                 end = True        
         
-    def playLySheet(self,lySheet):   
+    def playLySheet(self,lySheet, tempo):   
          self.sheet_ = self.parser_.getSheet(lySheet)
-         self.sheet_.tempo = self.tempo_
+         self.sheet_.tempo = tempo
          self.playSheet(self.sheet_)
                 
-    def playScale(self,scale):        
+    def playScale(self,scale, tempo):        
          self.sheet_ = scale.getScale()
-         self.sheet_.tempo = self.tempo_         
+         self.sheet_.tempo = tempo        
          self.playSheet(self.sheet_)
