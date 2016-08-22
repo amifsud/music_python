@@ -20,7 +20,7 @@ tempo = 200
 
 # Defining a scale
 scale = Scale()
-scale.tonality_ = 440.0
+scale.tonality = 440.0
 scale.setMajorMode()
 player.playScale(scale, tempo) # Asking the player to play the scale to a specific tempo
 

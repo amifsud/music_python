@@ -13,6 +13,13 @@ class Scale(object):
         self.mode_ = ()
         self.scale_ = Sheet()
         
+    @property
+    def tonality(self):
+        return self.tonality_
+    @tonality.setter
+    def tonality(self, x):
+        self.tonality_=x     
+        
     def setMajorMode(self):
         self.mode_ = (1.0, pow(2,2.0/12.0), pow(2,4.0/12.0), pow(2,5.0/12.0), pow(2,7.0/12.0), pow(2,9.0/12.0), pow(2,11.0/12.0), 2.0)
         
