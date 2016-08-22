@@ -9,10 +9,10 @@ from interfacage.interface_aport import InterfaceAport
 from interfacage.lylipond_parser import LyParser
 
 class Player(object):
-    def __init__(self, timbre):
+    def __init__(self):
         self.interface_ = InterfaceAport()
         self.parser_ = LyParser()        
-        self.timbre_ = timbre
+        self.timbre_ = None
         
         self.tempo_=60 # 60 noirs/minutes
 
@@ -25,10 +25,17 @@ class Player(object):
 
     @property
     def timbre(self):
-        return self.timbre_.spectre   
+        return self.timbre_.spectre  
     @timbre.setter
     def timbre(self, x):
         self.timbre_.spectre=x
+
+    @property
+    def instrument(self):
+        return self.timbre_.spectre        
+    @instrument.setter
+    def instrument(self, x):
+        self.timbre_=x
         
     @property
     def interface(self):
@@ -51,8 +58,11 @@ class Player(object):
          while end != True:
              note = sheet.lastPlayedNote
              if  note != 'end':
-                duration = sheet.computeDuration(note.timeDiv)                 
-                data = self.timbre_.computeData(note.height, self.interface_.bitrate)            
+                duration = sheet.computeDuration(note.timeDiv)
+                if self.timbre_ != None:
+                    data = self.timbre_.computeData(note.height, self.interface_.bitrate)
+                else:
+                    print 'No instrument given to the player'
                 self.playTone(data, duration, self.interface_.bitrate)
              else:
                 end = True        

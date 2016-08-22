@@ -10,8 +10,9 @@ import numpy as np
 
 class Timbre(object):
     
-    def __init__(self):
-        self.spectre_=[[1,1]]
+    def __init__(self, spectre=[[1,1]]):
+        self.spectre_=None
+        self.spectre = spectre
         self.timbres = None
         
     @property

@@ -9,12 +9,12 @@ from instruments.timbre import Timbre
 from music.scale import Scale
 from player.player import Player
 
-instrument = Timbre() # Defining an abstract instrument  
-player = Player(instrument) # Defining a player and giving it an instrument
+instrument = Timbre('violon') # Defining an instrument  
+player = Player() # Defining a player and giving it an interface
 player.interface.bitrate = 44000 # bitrate for the interface
 
-instrument.spectre = 'violon' # The instrument is finally set
-player.tempo = 200 # Defining the tempo
+player.instrument = instrument # giving an instrument to the player
+tempo = 100
 
 # Defining a scale
 scale = Scale()
