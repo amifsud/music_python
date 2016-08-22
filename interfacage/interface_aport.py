@@ -14,10 +14,10 @@ import matplotlib.pyplot as plt
 
 class InterfaceAport(object):
     
-    def __init__(self):
+    def __init__(self, bitrate):
 
         # Stream parameters
-        self.bitrate_ = 44100
+        self.bitrate_ = bitrate
         self.channels_ = 1
 
         # create an audio object

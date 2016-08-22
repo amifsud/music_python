@@ -10,9 +10,7 @@ from instruments.timbre import Timbre
 from music.scale import Scale
 from player.player import Player
 
-interface = InterfaceAport()
-interface.bitrate = 44000 # bitrate for the interface
-
+interface = InterfaceAport(44000)
 instrument = Timbre('violon') # Defining an instrument  
 player = Player(interface) # Defining a player and giving it an interface
 
