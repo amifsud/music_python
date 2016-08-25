@@ -55,12 +55,13 @@ class Player(object):
                     print 'No instrument given to the player'
                 self.playTone(data, duration, self.interface_.bitrate)
              else:
-                end = True        
+                end = True
                 sheet.begin()
         
     def playLySheet(self,lySheet, tempo=None, scale=None):   
          self.sheet_ = self.parser_.getSheet(lySheet,scale)
          self.playSheet(self.sheet_, tempo)
+         return self.sheet_
                 
     def playScale(self,scale, tempo=None):        
          self.sheet_ = scale.getScale()     
