@@ -13,7 +13,7 @@ class Sheet(object):
         
         self.notes_ = ()
         self.lastAddedNoteIndex_ = None
-        self.lastPlayedNoteIndex_ = 0
+        self.lastNoteToPlayIndex_ = 0
         self.lastTimeDiv_ = None
         
         self.tempo_=60 # 60 noirs/minutes
@@ -26,24 +26,24 @@ class Sheet(object):
         self.tempo_=x        
         
     @property
-    def lastAddedNote(self):
+    def getLastAddedNote(self):
         if self.lastAddedNoteIndex_ != None:
             return self.notes_[self.lastAddedNoteIndex_]
         else:
-            return Note(None, None)
+            return Note(None, None, 0)
             
     @property
-    def lastPlayedNote(self):           
-        if self.lastPlayedNoteIndex_ <= self.lastAddedNoteIndex_:
-            note = self.notes_[self.lastPlayedNoteIndex_]
-            self.lastPlayedNoteIndex_ += 1
+    def getLastNoteToPlay(self):           
+        if self.lastNoteToPlayIndex_ <= self.lastNoteToPlayIndex_:
+            note = self.notes_[self.lastNoteToPlayIndex_]
+            self.lastNoteToPlayIndex_ += 1
         else:
-            if self.lastPlayedNoteIndex_ != 0:
+            if self.lastNoteToPlayIndex_ != 0:
                 print "No more note"
-                note = Note(None, None)
+                note = Note(None, None, 0)
             else:
                 print "Still no note"
-                note = Note(None, None)
+                note = Note(None, None, 0)
 
         return note
 
@@ -60,7 +60,7 @@ class Sheet(object):
         else:
             self.lastAddedNoteIndex_ = 0
         self.notes_ += ('end',)
-        
+
     def computeDuration(self, timeDiv):
         if timeDiv != None:
             duration = 60.0/self.tempo_*4.0/float(timeDiv)
@@ -68,7 +68,7 @@ class Sheet(object):
             duration = 0.0  
                    
         return duration        
-        
+       
 if __name__ == "__main__":
     
     l=()

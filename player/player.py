@@ -46,10 +46,10 @@ class Player(object):
     def playSheet(self, sheet):
          end = False
          while end != True:
-             note = sheet.lastPlayedNote
+             note = sheet.getLastNoteToPlay
              if  note != 'end':
-                duration = sheet.computeDuration(note.timeDiv)
                 if self.timbre_ != None:
+                    duration = sheet.computeDuration(note.duration)
                     data = self.timbre_.computeData(note.height, self.interface_.bitrate)
                 else:
                     print 'No instrument given to the player'

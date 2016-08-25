@@ -18,10 +18,10 @@ class Note(object):
         self.height_=x
         
     @property
-    def timeDiv(self):
+    def duration(self):
         return self.duration_
-    @timeDiv.setter
-    def timeDiv(self, x):
+    @duration.setter
+    def duration(self, x):
         self.duration_=x
         
 if __name__ == "__main__":
@@ -33,4 +33,21 @@ if __name__ == "__main__":
     note.height=880.0
     note.duration=2
     print note.height
-    print note.duration
+
+    from pythonlangutil.overload import Overload, signature
+    
+    @Overload
+    @signature("int","int")
+    def stackoverflow(self,a,b):
+        print 'intVersion'
+        return a+b
+        
+    @stackoverflow.overload
+    @signature("float","float")
+    def stackoverflow(self,a,b):
+        print 'floatVersion'
+        return a+b
+        
+    print stackoverflow(2,3)
+    
+    
