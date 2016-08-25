@@ -23,7 +23,7 @@ class Scale(object):
     def setMajorMode(self):
         self.mode_ = (1.0, pow(2,2.0/12.0), pow(2,4.0/12.0), pow(2,5.0/12.0), pow(2,7.0/12.0), pow(2,9.0/12.0), pow(2,11.0/12.0), 2.0)
         
-    def getDegree(self,frequency):
+    def getDegree(self, frequency):
         degree = None
         i=1
         if self.tonality_ != None:
@@ -35,6 +35,11 @@ class Scale(object):
             print 'No tonality set'
             
         return degree
+        
+    def getFrequency(self, degree):
+        frequency = self.tonality_*self.mode_[degree-1]
+        return frequency
+        
     
     def getScale(self):
         
