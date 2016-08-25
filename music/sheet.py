@@ -16,7 +16,7 @@ class Sheet(object):
         self.lastNoteToPlayIndex_ = 0
         self.lastTimeDiv_ = None
         
-        self.tempo_= None
+        self.tempoDefault_= 100
         self.scale_ = None
 
     @property
@@ -74,9 +74,12 @@ class Sheet(object):
             self.lastAddedNoteIndex_ = 0
         self.notes_ += ('end',)
 
-    def computeDuration(self, timeDiv):
+    def computeDuration(self, timeDiv, tempo=None):
+        if tempo == None:
+            tempo = self.tempoDefault_
+            
         if timeDiv != None:
-            duration = 60.0/self.tempo_*4.0/float(timeDiv)
+            duration = 60.0/tempo*4.0/float(timeDiv)
         else:
             duration = 0.0  
                    
