@@ -31,22 +31,28 @@ class Sheet(object):
         return self.scale_
     @scale.setter
     def scale(self, x):
-        self.scale_=x        
+        self.scale_=x    
+        
+    def getNote(self,i):
+        if self.scale_ !=None and self.notes_[i] != 'end' and self.notes_[i].degree != None:
+            self.notes_[i].height = self.scale_.getFrequency(self.notes_[i].degree)
 
+        return self.notes_[i]
+        
     def begin(self):
         self.lastNoteToPlayIndex_ = 0
-
+        
     @property
     def getLastAddedNote(self):
         if self.lastAddedNoteIndex_ != None:
-            return self.notes_[self.lastAddedNoteIndex_]
+            return self.getNote(self.lastAddedNoteIndex_)
         else:
             return Note(None, None, 0)
-           
+            
     @property
     def getLastNoteToPlay(self):           
         if self.lastNoteToPlayIndex_ <= self.lastNoteToPlayIndex_:
-            note = self.notes_[self.lastNoteToPlayIndex_]
+            note = self.getNote(self.lastNoteToPlayIndex_)
             self.lastNoteToPlayIndex_ += 1
         else:
             if self.lastNoteToPlayIndex_ != 0:
@@ -75,6 +81,7 @@ class Sheet(object):
             self.lastAddedNoteIndex_+=1
         else:
             self.lastAddedNoteIndex_ = 0
+
         self.notes_ += ('end',)
 
     def computeDuration(self, timeDiv, tempo=None):
