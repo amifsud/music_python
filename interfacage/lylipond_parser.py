@@ -64,16 +64,16 @@ class LyParser(object):
 
         return timeDiv
         
-    def parseCommand(self, lyCommand):
+    def parseCommand(self, lyCommand, scale=None):
         if lyCommand == '{':
             self.sheet_ = Sheet()
+            self.sheet_.scale = scale
         elif lyCommand == '}':
             self.sheet_.addEnd()
         else:
             print "Bad lilypond command"
             
-    def parseNote(self, lyNote):
-                
+    def parseNote(self, lyNote):          
         self.lyNote_=lyNote
         self.r_=re.search('([a-gr](?!s)){1}([ei]s){,1}([\',]){,1}([1-9]){,2}(\.){,1}',self.lyNote_)
  
@@ -84,21 +84,23 @@ class LyParser(object):
                 self.sheet_.addNote(height,timeDiv)
             else:
                 print "No sheet created"
-        else:
-            self.parseCommand(lyNote)
         
     def getNote(self, lyNote):
+        if self.sheet_ == None:
+            self.sheet_ = Sheet()
         self.parseNote(lyNote)
         return self.sheet_.getLastAddedNote
         
-    def parseSheet(self, lySheet):
-        
+    def parseSheet(self, lySheet, scale=None):     
         l=re.split(' ', lySheet)
         for i in range(len(l)):
-            self.parseNote(l[i])
+            if l[i] != '{' and l[i] != '}':
+                self.parseNote(l[i])
+            else:
+                self.parseCommand(l[i],scale)
             
-    def getSheet(self, lySheet):
-        self.parseSheet(lySheet)
+    def getSheet(self, lySheet, scale=None):
+        self.parseSheet(lySheet,scale)
         return self.sheet_
         
 if __name__ == "__main__":

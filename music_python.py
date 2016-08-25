@@ -6,6 +6,7 @@ Created on Wed Jun 29 22:11:53 2016
 """
 
 from interfacage.interface_aport import InterfaceAport
+from interfacage.lylipond_parser import LyParser
 from instruments.timbre import Timbre
 from music.scale import Scale
 from player.player import Player
@@ -13,14 +14,14 @@ from player.player import Player
 interface = InterfaceAport(44000) # Defining an interface with a bitrate
 player = Player(interface) # Defining a player and giving it an interface
 
-instrument = Timbre('violon') # Defining an instrument
+instrument = Timbre('orgue') # Defining an instrument
 player.instrument = instrument # giving an instrument to the player
 
 tempo = 200
 
 # Defining a scale
 scale = Scale()
-scale.tonality = 440.0
+scale.tonality = LyParser().getNote('c,').height
 scale.setMajorMode()
 player.playScale(scale, tempo) # Asking the player to play the scale to a specific tempo
 
@@ -29,7 +30,7 @@ player.playScale(scale, tempo) # Asking the player to play the scale to a specif
 #sheet="{ ais8 ais a g,16 f, f, d,8. c,4 f,2 }"
 sheet="{ r2 c,8 c, a4 g, f, g,2 e,4 f, r f, g,2 c,4 a b c g,2 e,8 e, f,4 e, d, c,2. r2. }"       
 #sheet="{ c4 c c d e2 d c4 e d d c2 c4 c c d e2 d c4 e d d c2 d4 d d d a2 a d4 c b a g,2 c4 c c d e2 d c4 e d d c2 }"    
-player.playLySheet(sheet, tempo) # Asking the player to play the sheet to a specific tempo
+player.playLySheet(sheet, tempo, scale) # Asking the player to play the sheet to a specific tempo
     
 #==============================================================================
 #     import matplotlib.pyplot as plt

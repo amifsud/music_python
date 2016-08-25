@@ -57,8 +57,8 @@ class Player(object):
              else:
                 end = True        
         
-    def playLySheet(self,lySheet, tempo):   
-         self.sheet_ = self.parser_.getSheet(lySheet)
+    def playLySheet(self,lySheet, tempo, scale=None):   
+         self.sheet_ = self.parser_.getSheet(lySheet,scale)
          self.sheet_.tempo = tempo
          self.playSheet(self.sheet_)
                 
