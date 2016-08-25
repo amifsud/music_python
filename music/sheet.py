@@ -32,14 +32,17 @@ class Sheet(object):
     @scale.setter
     def scale(self, x):
         self.scale_=x        
-        
+
+    def begin(self):
+        self.lastNoteToPlayIndex_ = 0
+
     @property
     def getLastAddedNote(self):
         if self.lastAddedNoteIndex_ != None:
             return self.notes_[self.lastAddedNoteIndex_]
         else:
             return Note(None, None, 0)
-            
+           
     @property
     def getLastNoteToPlay(self):           
         if self.lastNoteToPlayIndex_ <= self.lastNoteToPlayIndex_:

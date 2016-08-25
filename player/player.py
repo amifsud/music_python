@@ -56,6 +56,7 @@ class Player(object):
                 self.playTone(data, duration, self.interface_.bitrate)
              else:
                 end = True        
+                sheet.begin()
         
     def playLySheet(self,lySheet, tempo=None, scale=None):   
          self.sheet_ = self.parser_.getSheet(lySheet,scale)
