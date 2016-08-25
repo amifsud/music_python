@@ -16,14 +16,22 @@ class Sheet(object):
         self.lastNoteToPlayIndex_ = 0
         self.lastTimeDiv_ = None
         
-        self.tempo_=60 # 60 noirs/minutes
+        self.tempo_= None
+        self.scale_ = None
 
     @property
     def tempo(self):
         return self.tempo_
     @tempo.setter
     def tempo(self, x):
-        self.tempo_=x        
+        self.tempo_=x 
+        
+    @property
+    def scale(self):
+        return self.scale_
+    @scale.setter
+    def scale(self, x):
+        self.scale_=x        
         
     @property
     def getLastAddedNote(self):
@@ -52,7 +60,12 @@ class Sheet(object):
             self.lastAddedNoteIndex_+=1
         else:
             self.lastAddedNoteIndex_ = 0
-        self.notes_ += (Note(height,timeDiv),)
+            
+        note = Note(height,timeDiv)
+        if self.scale_ != None:
+            note.degree = self.scale_.getDegree(note.height)
+        
+        self.notes_ += (note,)
         
     def addEnd(self):
         if self.lastAddedNoteIndex_ !=None:

@@ -8,6 +8,7 @@ Created on Mon Jul  4 21:25:08 2016
 class Note(object):
     def __init__(self,height,duration):
         self.height_=height
+        self.degree_=None
         self.duration_=duration
         
     @property
@@ -16,6 +17,13 @@ class Note(object):
     @height.setter
     def height(self, x):
         self.height_=x
+        
+    @property
+    def degree(self):
+        return self.degree_
+    @degree.setter
+    def degree(self, x):
+        self.degree_=x        
         
     @property
     def duration(self):
