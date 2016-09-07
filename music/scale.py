@@ -22,13 +22,18 @@ class Scale(object):
         
     def setMajorMode(self):
         self.mode_ = (1.0, pow(2,2.0/12.0), pow(2,4.0/12.0), pow(2,5.0/12.0), pow(2,7.0/12.0), pow(2,9.0/12.0), pow(2,11.0/12.0), 2.0)
-        
+       
+       
+    def setDiatonicMode(self):
+        self.mode_ = (1.0, pow(2,1.0/12.0), pow(2,2.0/12.0), pow(2,3.0/12.0), pow(2,4.0/12.0), pow(2,5.0/12.0), pow(2,6.0/12.0), pow(2,7.0/12.0), pow(2,8.0/12.0), pow(2,9.0/12.0), pow(2,10.0/12.0), pow(2,11.0/12.0), 2.0)
+       
+    
     def getDegree(self, frequency):
         degree = None
         i=1
         if self.tonality_ != None:
             for m in self.mode_:
-                if abs(m*self.tonality_ - frequency) < 1:
+                if abs(m*self.tonality_ - frequency) <= 8.25:
                     degree = i
                 i=i+1
         else:
