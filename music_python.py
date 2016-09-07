@@ -5,14 +5,12 @@ Created on Wed Jun 29 22:11:53 2016
 @author: alexis
 """
 
-from interfacage.interface_aport import InterfaceAport
 from interfacage.lylipond_parser import LyParser
 from instruments.timbre import Timbre
 from music.scale import Scale
 from player.player import Player
 
-interface = InterfaceAport(44000) # Defining an interface with a bitrate
-player = Player(interface) # Defining a player and giving it an interface
+player = Player()
 
 instrument = Timbre('orgue') # Defining an instrument
 player.instrument = instrument # giving an instrument to the player
@@ -33,7 +31,7 @@ sheet="{ r2 c,8 c, a4 g, f, g,2 e,4 f, r f, g,2 c,4 a b c g,2 e,8 e, f,4 e, d, c
 parsedSheet = player.playLySheet(sheet, tempo, scale) # Asking the player to play the sheet to a specific tempo
 
 # Transposing  
-scale.tonality = LyParser().getNote('a,').height
+scale.tonality = LyParser().getNote('b,').height
 player.playSheet(parsedSheet, tempo)
 #==============================================================================
 #     import matplotlib.pyplot as plt

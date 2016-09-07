@@ -6,10 +6,11 @@ Created on Mon Aug 22 01:08:11 2016
 """
 
 from interfacage.lylipond_parser import LyParser
+from interfacage.interface_aport import InterfaceAport
 
 class Player(object):
-    def __init__(self, interface):
-        self.interface_ = interface
+    def __init__(self, ):
+        self.interface_ = InterfaceAport(44000) # Defining an interface with a bitrate
         self.parser_ = LyParser()        
         self.timbre_ = None
 
