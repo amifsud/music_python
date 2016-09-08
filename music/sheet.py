@@ -35,7 +35,7 @@ class Sheet(object):
         
     def getNote(self,i):
         if self.scale_ !=None and self.notes_[i] != 'end' and self.notes_[i].degree != None:
-            self.notes_[i].height = self.scale_.getFrequency(self.notes_[i].degree)
+            self.notes_[i].height = self.scale_.getFrequency(self.notes_[i].degree, self.notes_[i].octave)
 
         return self.notes_[i]
         
@@ -72,7 +72,7 @@ class Sheet(object):
             
         note = Note(height,timeDiv)
         if self.scale_ != None:
-            note.degree = self.scale_.getDegree(note.height)
+            (note.degree, note.octave) = self.scale_.getDegree(note.height)
         
         self.notes_ += (note,)
         

@@ -32,6 +32,10 @@ class Scale(object):
         degree = None
         i=1
         if self.tonality_ != None:
+            octave=1
+            while frequency>=self.tonality_*2:
+                frequency=frequency/2.0
+                octave=octave+1
             for m in self.mode_:
                 if abs(m*self.tonality_ - frequency) <= 8.25:
                     degree = i
@@ -39,15 +43,14 @@ class Scale(object):
         else:
             print 'No tonality set'
             
-        return degree
+        return (degree, octave)
         
-    def getFrequency(self, degree):
-        frequency = self.tonality_*self.mode_[degree-1]
+    def getFrequency(self, degree, octave):
+        frequency = self.tonality_*self.mode_[degree-1]*octave
         return frequency
         
     
     def getScale(self):
-        
         for note in self.mode_:
             self.scale_.addNote(self.tonality_*note, 8)
             

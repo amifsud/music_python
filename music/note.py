@@ -9,6 +9,7 @@ class Note(object):
     def __init__(self,height,duration):
         self.height_=height
         self.degree_=None
+        self.octave_ = None
         self.duration_=duration
         
     @property
@@ -23,7 +24,14 @@ class Note(object):
         return self.degree_
     @degree.setter
     def degree(self, x):
-        self.degree_=x        
+        self.degree_=x
+
+    @property
+    def octave(self):
+        return self.octave_
+    @octave.setter
+    def octave(self, x):
+        self.octave_=x          
         
     @property
     def duration(self):
