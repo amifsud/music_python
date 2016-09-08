@@ -8,10 +8,17 @@ Created on Sat Aug 20 18:22:12 2016
 from music.sheet import Sheet
 
 class Scale(object):
-    def __init__(self):
-        self.tonality_ = None
+    def __init__(self, mode, tonality=None):
+        self.tonality_ = tonality
         self.mode_ = ()
         self.scale_ = Sheet()
+        
+        if mode=='diatonic':
+            self.setDiatonicMode()
+        elif mode=='major':
+            self.setMajorMode()
+        else:
+            print "No mode set"
         
     @property
     def tonality(self):
