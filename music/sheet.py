@@ -9,7 +9,7 @@ from note import Note
 
 class Sheet(object):
     
-    def __init__(self,):
+    def __init__(self):
         
         self.notes_ = ()
         self.lastAddedNoteIndex_ = None
@@ -18,6 +18,17 @@ class Sheet(object):
         
         self.tempoDefault_= 100
         self.scale_ = None
+        
+    def __iter__(self):
+        self.i = 0
+        return self
+    
+    def next(self):
+        if self.notes_[self.i]!='end':
+            self.i=self.i+1
+            return self.notes_[self.i-1]
+        raise StopIteration 
+    __next__=next
 
     @property
     def tempo(self):
