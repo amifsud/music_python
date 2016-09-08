@@ -21,18 +21,39 @@ tempo = 200
 scale = Scale()
 scale.tonality = LyParser().getNote('c,').height
 scale.setMajorMode()
-player.playScale(scale, tempo) # Asking the player to play the scale to a specific tempo
+#player.playScale(scale, tempo) # Asking the player to play the scale to a specific tempo
 
 # Defining a sheet
 #sheet="{ a,4 ais, b, c, cis, d, dis, e, f, fis, g, gis, a4 ais b c cis d dis e f fis g gis a'4 ais' b' c' cis' d' dis' e' f' fis' g' gis' }"
 #sheet="{ ais8 ais a g,16 f, f, d,8. c,4 f,2 }"
 sheet="{ r2 c,8 c, a4 g, f, g,2 e,4 f, r f, g,2 c,4 a b c g,2 e,8 e, f,4 e, d, c,2. r2. }"       
 #sheet="{ c4 c c d e2 d c4 e d d c2 c4 c c d e2 d c4 e d d c2 d4 d d d a2 a d4 c b a g,2 c4 c c d e2 d c4 e d d c2 }"    
-parsedSheet = player.playLySheet(sheet, tempo, scale) # Asking the player to play the sheet to a specific tempo
+#parsedSheet = player.playLySheet(sheet, tempo, scale) # Asking the player to play the sheet to a specific tempo
 
 # Transposing  
-scale.tonality = LyParser().getNote('b,').height
-player.playSheet(parsedSheet, tempo)
+scale.tonality = LyParser().getNote('a,').height
+#player.playSheet(parsedSheet, tempo)
+
+
+scale.tonality = LyParser().getNote('c,').height
+scale.setDiatonicMode()
+player.playScale(scale, tempo)
+
+fondamental = LyParser().getNote('c,').height
+subSpectre = ()
+for i in range(1,7):
+    note = fondamental*i
+    subSpectre = subSpectre+(scale.getDegree(note),)
+print subSpectre
+
+fondamental = LyParser().getNote('f,').height
+subSpectre = ()
+for i in range(1,20):
+    note = fondamental*i
+    subSpectre = subSpectre+(scale.getDegree(note),)
+print subSpectre
+    
+
 #==============================================================================
 #     import matplotlib.pyplot as plt
 #     import numpy as np
