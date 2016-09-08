@@ -36,23 +36,17 @@ scale.tonality = LyParser().getNote('a,').height
 
 
 scale.tonality = LyParser().getNote('c,').height
-scale.setDiatonicMode()
-player.playScale(scale, tempo)
+scaleDiat = Scale()
+scaleDiat.setDiatonicMode()
+scaleDiat.tonality = LyParser().getNote('c,').height
 
-fondamental = LyParser().getNote('c,').height
-subSpectre = ()
-for i in range(1,7):
-    note = fondamental*i
-    subSpectre = subSpectre+(scale.getDegree(note),)
-print subSpectre
-
-fondamental = LyParser().getNote('f,').height
-subSpectre = ()
-for i in range(1,20):
-    note = fondamental*i
-    subSpectre = subSpectre+(scale.getDegree(note),)
-print subSpectre
-    
+sheet=scale.getScale()
+for fondamental in sheet:
+    subSpectre = ()
+    for i in range(1,7):
+        note = fondamental.height*i
+        subSpectre = subSpectre+(scaleDiat.getDegree(note),)
+    print subSpectre
 
 #==============================================================================
 #     import matplotlib.pyplot as plt
