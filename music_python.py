@@ -12,14 +12,14 @@ from player.player import Player
 
 player = Player()
 
-instrument = Timbre('orgue') # Defining an instrument
+instrument = Timbre('sinusoidal') # Defining an instrument
 player.instrument = instrument # giving an instrument to the player
 
 tempo = 200
 
 # Defining a scale
 majorScale = Scale('major',LyParser().getNote('c,').height)
-player.playScale(majorScale, tempo) # Asking the player to play the scale to a specific tempo
+#player.playScale(majorScale, tempo) # Asking the player to play the scale to a specific tempo
 
 # Defining a sheet
 #sheet="{ a,4 ais, b, c, cis, d, dis, e, f, fis, g, gis, a4 ais b c cis d dis e f fis g gis a'4 ais' b' c' cis' d' dis' e' f' fis' g' gis' }"
@@ -32,15 +32,31 @@ parsedSheet = player.playLySheet(sheet, tempo, majorScale) # Asking the player t
 majorScale.tonality = LyParser().getNote('a,').height
 player.playSheet(parsedSheet, tempo)
 
+#player.playMidi()
+
 # Computing the harmony of a scale
-majorScale.tonality = LyParser().getNote('c,').height
-diatonicScale = Scale('diatonic',LyParser().getNote('c,').height)
-for fondamental in majorScale.getScale():
-    subSpectre = ()
-    for i in range(1,7):
-        note = fondamental.height*i
-        subSpectre = subSpectre+(diatonicScale.getDegree(note),)
-    print subSpectre
+#tonality = LyParser().getNote('c,')
+#majorScale.tonality = tonality.height
+#diatonicScale = Scale('diatonic',tonality.height)
+#for fondamental in majorScale.getScale():
+#    subSpectre = ()
+#    for i in range(1,7):
+#        note = fondamental.height*i
+#        while note>=fondamental.height*2:
+#                note=note/2.0
+#        subSpectre=subSpectre+(note,)
+#    print subSpectre
+# 
+#fondamental = LyParser().getNote('c,') 
+#subSpectre = ()
+#for i in range(1,14):
+#    note = fondamental.height*i
+#    while note>=fondamental.height*2:
+#            note=note/2.0
+#    subSpectre=subSpectre+(note,)
+#scale = tuple(sorted(set(subSpectre)))
+#player.playTuple(scale)
+#print scale
 
 #==============================================================================
 #     import matplotlib.pyplot as plt

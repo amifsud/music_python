@@ -62,16 +62,16 @@ class Sheet(object):
             
     @property
     def getLastNoteToPlay(self):           
-        if self.lastNoteToPlayIndex_ <= self.lastNoteToPlayIndex_:
+        if self.lastNoteToPlayIndex_ <= self.lastAddedNoteIndex_:
             note = self.getNote(self.lastNoteToPlayIndex_)
             self.lastNoteToPlayIndex_ += 1
         else:
             if self.lastNoteToPlayIndex_ != 0:
                 print "No more note"
-                note = Note(None, None, 0)
+                note = Note(None, 0)
             else:
                 print "Still no note"
-                note = Note(None, None, 0)
+                note = Note(None, 0)
 
         return note
 

@@ -6,12 +6,16 @@ Created on Mon Aug 22 01:08:11 2016
 """
 
 from interfacage.lylipond_parser import LyParser
+from interfacage.midi_parser import MidiParser
 from interfacage.interface_aport import InterfaceAport
+from interfacage.interface_jack import InterfaceJack
+from music.sheet import Sheet
 
 class Player(object):
     def __init__(self, ):
         self.interface_ = InterfaceAport(44000) # Defining an interface with a bitrate
-        self.parser_ = LyParser()        
+        self.parser_ = None    
+        self.jack_ = None
         self.timbre_ = None
 
     @property
@@ -36,7 +40,6 @@ class Player(object):
         self.timbre_=x
         
     def playTone(self, data, duration, bitrate):
-        
         if len(data) != 1:
             numberofperiods = int(duration * bitrate / float(len(data)))
         else:
@@ -59,11 +62,46 @@ class Player(object):
                 end = True
                 sheet.begin()
         
-    def playLySheet(self,lySheet, tempo=None, scale=None):   
+    def playLySheet(self,lySheet, tempo=None, scale=None):  
+         self.parser_ = LyParser()
          self.sheet_ = self.parser_.getSheet(lySheet,scale)
          self.playSheet(self.sheet_, tempo)
          return self.sheet_
+         
+    def playMidi(self, scale=None):
+         self.jack_ = InterfaceJack(self)
+         self.parser_ = MidiParser()
+         sheet = self.parser_.sheet_
+         end = False
+         while end != True:
+             note = sheet.getLastNoteToPlay
+             if  note != 'end':
+                if self.timbre_ != None:
+                    data = self.timbre_.computeData(note.height, self.interface_.bitrate)
+                else:
+                    print 'No instrument given to the player'
+                self.interface_.playData(data, 100)
+             else:
+                end = True
+                sheet.begin()
+        
+    def feedMidiSheet(self, command):
+        self.parser_.parseCommand(command)
+        
+    def stopMidi(self, scale=None):
+        del self.parser_
+        del self.jack_
+        self.parser_ = None
+        self.jack_ = None
+        
                 
     def playScale(self,scale, tempo=None):        
          self.sheet_ = scale.getScale()     
          self.playSheet(self.sheet_, tempo)
+         
+    def playTuple(self,Tuple,tempo=None):
+        self.sheet_ = Sheet()
+        for note in Tuple:
+            self.sheet_.addNote(note, 8) 
+        self.sheet_.addEnd()
+        self.playSheet(self.sheet_, tempo)
