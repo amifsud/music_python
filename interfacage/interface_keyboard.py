@@ -205,28 +205,25 @@ class pyxhookkeyevent:
         self.MessageName = MessageName
     
     def __str__(self):
-        return "\nKey Pressed: " + str(self.Key) + "\nAscii Value: " + str(self.Ascii) + "\nMessageName: " + str(self.MessageName) + "\n"
+        return "\nKey Pressed: " + str(self.Key) + "\nMessageName: " + str(self.MessageName) + "\n"
 
 class InterfaceKeyboard(HookManager):
-    def __init__(self):
+    def __init__(self,player=None):
         HookManager.__init__(self)
-        self.stack=()
-        
+       
+        self.player = player
         self.KeyDown = self.keyDownCallback
         self.KeyUp = self.keyUpCallback 
         
         self.start()
         
     def keyDownCallback(self, event):
-        self.stack = self.stack + (event,)
-        self.printevent(event)
+        if  self.player != None:
+            self.player.playEvent(event)
         
     def keyUpCallback(self, event):
-        self.stack = self.stack + (event,) 
-        self.printevent(event)
-
-    def cleanStack(self):
-        self.stack = () 
+        if  self.player != None:
+            self.player.stopEvent(event)
 
 #######################################################################
 #########################END CLASS DEF#################################

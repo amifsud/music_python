@@ -11,8 +11,10 @@ from music.scale import Scale
 from player.player import Player
 
 player = Player()
+interface = player.playRealTime()
 
-instrument = Timbre('sinusoidal') # Defining an instrument
+
+instrument = Timbre('orgue') # Defining an instrument
 player.instrument = instrument # giving an instrument to the player
 
 tempo = 200
@@ -26,11 +28,11 @@ majorScale = Scale('major',LyParser().getNote('c,').height)
 #sheet="{ ais8 ais a g,16 f, f, d,8. c,4 f,2 }"
 sheet="{ r2 c,8 c, a4 g, f, g,2 e,4 f, r f, g,2 c,4 a b c g,2 e,8 e, f,4 e, d, c,2. r2. }"
 #sheet="{ c4 c c d e2 d c4 e d d c2 c4 c c d e2 d c4 e d d c2 d4 d d d a2 a d4 c b a g,2 c4 c c d e2 d c4 e d d c2 }"    
-parsedSheet = player.playLySheet(sheet, tempo, majorScale) # Asking the player to play the sheet to a specific tempo
+#parsedSheet = player.playLySheet(sheet, tempo, majorScale) # Asking the player to play the sheet to a specific tempo
 
 # Transposing  
 majorScale.tonality = LyParser().getNote('a,').height
-player.playSheet(parsedSheet, tempo)
+#player.playSheet(parsedSheet, tempo)
 
 #player.playMidi()
 
