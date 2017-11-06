@@ -7,10 +7,6 @@ Created on Mon Jun 27 12:05:09 2016
 """
 
 from pyaudio import PyAudio
-import wave
-import numpy as np
-import scipy.fftpack as fftp
-import matplotlib.pyplot as plt
 from threading import Thread
 import Queue
 
