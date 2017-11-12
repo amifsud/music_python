@@ -11,16 +11,20 @@ from interfacage.keyboard_parser import KeyboardParser
 from interfacage.interface_aport import InterfaceAport
 #from interfacage.interface_jack import InterfaceJack
 from interfacage.interface_keyboard import InterfaceKeyboard
+from learning.tree import Tree
 from music.sheet import Sheet
 
 class Player(object):
     def __init__(self, ):
         self.interface_ = InterfaceAport(44000) # Defining an interface with a bitrate
-        self.parser_ = None    
+        self.parser_ = None
+        self.keyboard = None
+        self.learner = None
 #        self.jack_ = None
         self.timbre_ = None
         
         self.lastHeight = "vide"
+        self.displayKey = 'a'
 
     @property
     def tempo(self):
@@ -85,16 +89,25 @@ class Player(object):
         
     def playEvent(self,event):
          if self.parser_.isIn(event):
-             height = self.parser_.parseEvent(event)
+             height = self.parser_.getHeight(event)
+             if self.learner != None:
+                 note = self.parser_.getNote(event)
+                 self.learner.parseNote(note)
              data = self.timbre_.computeData(height, self.interface_.bitrate)
              if self.lastHeight != height:
                  self.interface_.playData(data)
              self.lastHeight = height
+             
+         if event.Key == self.displayKey:
+             self.learner.display()
          
     def stopEvent(self,event):
          if self.parser_.isIn(event):
              self.interface_.stopLast()
              self.lastHeight = "vide"
+             
+    def enableLearning(self):
+        self.learner = Tree()
          
 #    def playMidi(self, scale=None):
 #         self.jack_ = InterfaceJack(self)

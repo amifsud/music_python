@@ -12,7 +12,7 @@ from player.player import Player
 
 player = Player()
 interface = player.playRealTime()
-
+player.enableLearning()
 
 instrument = Timbre('orgue') # Defining an instrument
 player.instrument = instrument # giving an instrument to the player

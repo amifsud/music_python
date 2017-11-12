@@ -102,12 +102,12 @@ if __name__ == "__main__":
     T = Tree()
     T.parseNotesSequence(['A','B','C','D'])
     #T.parseNotesSequence(['A','B','B','C'])
-    T.display()
+    #T.display()
     
     T1 = Tree()
     l=['A','B','C','D']
     for n in l:
         T1.parseNote(n)
-    T1.display()
+    #T1.display()
     
     

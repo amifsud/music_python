@@ -9,23 +9,27 @@ class KeyboardParser(object):
     
     def __init__(self):
         self.L = ["q","z","s","e","d","f","t","g","y","h","u","j","k"]
+        self.scale = ['C','Cis','D','Dis','E','F','Fis','G','Gis','A','Ais','B','C']
+        self.num = None
         
     def parseEvent(self,event):
-        
         found = False
         for i in xrange(len(self.L)):
             if event.Key == self.L[i] : 
-                num = float(i)
-                found = True
-                
+                self.num = i
+                found = True       
         if found==False:
-            num = - float('Inf') 
+            self.num = - int('Inf')
+            
+    def getHeight(self,event):
+        self.parseEvent(event)
+        return 523.25*pow(2,float(self.num/12.0))
         
-        height = 523.2511306011972*pow(2,num/12.0)
-        return height
+    def getNote(self,event):
+        self.parseEvent(event)
+        return self.scale[self.num]
         
     def isIn(self,event):
-        
         found = False
         for l in self.L:
             if event.Key == l : 
