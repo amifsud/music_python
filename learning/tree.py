@@ -8,6 +8,7 @@ Created on Mon Aug 22 01:08:11 2016
 import plotly.plotly as py
 import plotly.graph_objs as go
 from igraph import Graph, plot
+import random
 
 class Node(object):
     def __init__(self,name,index,p=None):
@@ -44,7 +45,7 @@ class Tree(object):
         self.heads = {}
         
         self.listOfNodes = []
-        self.historySize = 4
+        self.historySize = 10
         
     def addVertex(self, obj, p=None):
         self.tree.add_vertex()
@@ -96,12 +97,53 @@ class Tree(object):
         layout = self.tree.layout('kk')
         p = plot(self.tree, layout = layout)
         p.show()
+        
+    def getContinuations(self,SIn,p=None):
+        if len(SIn) > 0:
+            if p == None:
+                S=list(SIn)
+                S.reverse()
+                s=S.pop(0)
+                if s in self.heads:
+                    if len(SIn)==1: return self.heads[s].continuations
+                    else: return self.getContinuations(S,self.heads[s])
+                else:
+                    return None
+            else:
+                s=SIn.pop(0)
+                if s in p.childs:
+                    if len(SIn)==0: return p.childs[s].continuations
+                    else: return self.getContinuations(SIn,p.childs[s])
+                else:
+                    return None
+                    
+    def playRandomly(self,p=None):
+        if p==None:
+            L=[random.choice(self.heads.keys())]
+            print L
+            c=self.getContinuations(L)
+            print c
+            if c!=None:
+                L+=[self.listOfNodes[random.choice(c)-1]]
+                print L
+                self.playRandomly(L)
+                return L
+        else:
+            print p
+            c=self.getContinuations(p)
+            print c
+            if c!=None:
+                p+=[self.listOfNodes[random.choice(c)-1]]
+                print p
+                self.playRandomly(p)
+        
+        
 
 if __name__ == "__main__":
     
     T = Tree()
-    T.parseNotesSequence(['A','B','C','D'])
-    #T.parseNotesSequence(['A','B','B','C'])
+    T.parseNotesSequence(['A','B','C','D','E'])
+    T.parseNotesSequence(['A','B','B','C','D','E'])
     #T.display()
     
     T1 = Tree()
@@ -109,5 +151,11 @@ if __name__ == "__main__":
     for n in l:
         T1.parseNote(n)
     #T1.display()
-    
+        
+    T2 = Tree()
+    T2.parseNotesSequence(['C','C','C','D','E','D','C','E','D','D','C'])
+    T2.parseNotesSequence(['C','C','C','D','E','D','C','E','D','D','C'])
+    T2.parseNotesSequence(['D','D','D','A','A','D','C','B','A','G'])
+    T2.parseNotesSequence(['C','C','C','D','E','D','C','E','D','D','C'])
+    T2.playRandomly()
     
